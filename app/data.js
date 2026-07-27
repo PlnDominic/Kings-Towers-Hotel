@@ -4,6 +4,7 @@ export const heroImages = [
   { src: "/images/pool-waterfall.jpg", alt: "Pool with carved African relief mural and stone waterfall" },
   { src: "/images/poolbar-terrace.jpg", alt: "Pool Bar terrace with seating" },
   { src: "/images/hotel-exterior.jpg", alt: "Kings Towers Hotel exterior" },
+  { src: "/images/room-queen.jpg", alt: "Queen Room with wood ceiling and orange curtains" },
 ];
 
 export const rooms = [
@@ -11,8 +12,8 @@ export const rooms = [
     id: "queen",
     title: "Queen Room",
     price: "525",
-    img: "/images/pool-grounds.jpg",
-    alt: "Kings Towers Hotel swimming pool and grounds",
+    img: "/images/room-queen.jpg",
+    alt: "Queen Room with wood ceiling and orange curtains",
     desc: "A spacious room with a queen bed, warm wood flooring and a dedicated work desk.",
     features: "Queen bed · Air conditioning · Ensuite bath · DSTV",
   },
@@ -79,7 +80,7 @@ export const galleryImages = [
   { src: "/images/pool-waterfall.jpg", alt: "Pool with stone waterfall" },
   { src: "/images/poolbar-terrace.jpg", alt: "Pool Bar terrace" },
   { src: "/images/hotel-exterior.jpg", alt: "Hotel exterior" },
-  { src: "/images/gallery-queen.jpg", alt: "Queen Room" },
+  { src: "/images/room-queen.jpg", alt: "Queen Room" },
   { src: "/images/room-standard.jpg", alt: "Standard Room" },
   { src: "/images/gallery-twin.jpg", alt: "Twin Room" },
 ];
