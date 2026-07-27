@@ -30,6 +30,17 @@ export function ChevronRight() {
   );
 }
 
+// Centered serif heading + short accent underline, shared by the
+// Gallery/Testimonials pair so the two columns read as one composition.
+export function SerifHeading({ children }) {
+  return (
+    <div className="text-center">
+      <h2 className="m-0 font-serif-display text-[clamp(1.6rem,3vw,2.1rem)] font-medium text-ink">{children}</h2>
+      <span className="mx-auto mt-4 block h-[2px] w-14 bg-accent" />
+    </div>
+  );
+}
+
 // Underlined text-link nav item with a hover underline that draws in from
 // the left. Color is left to the caller (an inline `style={{color:"inherit"}}`
 // beats the project-wide `a { color: accent }` rule reliably, whereas the

@@ -45,40 +45,6 @@ export const rooms = [
   },
 ];
 
-const icon = (paths) =>
-  `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4">${paths}</svg>`;
-
-export const amenities = [
-  {
-    title: "Twin-Bed Guest Rooms",
-    desc: "Clean, tastily furnished, air-conditioned rooms with personal refrigerators.",
-    icon: icon(
-      '<path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6M3 18h18M3 18v2M21 18v2M7 10V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3"/>'
-    ),
-  },
-  {
-    title: "Swimming Pool",
-    desc: "Rooftop garden and poolside terrace with tropical fruit cocktails.",
-    icon: icon(
-      '<path d="M2 17c1.5 1 3 1 4.5 0S9 16 10.5 17s3 1 4.5 0 3-1 4.5 0 3 1 4.5 0M4 12l7-8 7 8"/>'
-    ),
-  },
-  {
-    title: "DSTV & Local Channels",
-    desc: "In-room DSTV and four local TV channels.",
-    icon: icon(
-      '<rect x="3" y="5" width="18" height="13" rx="1"/><path d="M8 21h8M12 18v3"/>'
-    ),
-  },
-  {
-    title: "4 Bars, 3 Restaurants",
-    desc: "Oriental and rare African dishes, plus a chilled pool bar.",
-    icon: icon(
-      '<path d="M4 3h16l-1.5 9a5 5 0 0 1-5 4h-3a5 5 0 0 1-5-4L4 3zM8 21h8M12 16v5"/>'
-    ),
-  },
-];
-
 export const galleryImages = [
   { src: "/images/pool-grounds.jpg", alt: "Swimming pool and grounds" },
   { src: "/images/poolside-garden.jpg", alt: "Poolside garden with African relief mural" },
@@ -88,6 +54,15 @@ export const galleryImages = [
   { src: "/images/gallery-queen.jpg", alt: "Queen Room" },
   { src: "/images/room-standard.jpg", alt: "Standard Room" },
   { src: "/images/gallery-twin.jpg", alt: "Twin Room" },
+];
+
+// Placeholder copy only — no real guest reviews were supplied, and
+// inventing quotes attributed to made-up guests would be a fabricated
+// testimonial. Replace each entry with a real review before launch.
+export const testimonials = [
+  { quote: "Add a real guest testimonial here.", name: "Guest name", detail: "Room type" },
+  { quote: "Add a second guest testimonial here.", name: "Guest name", detail: "Room type" },
+  { quote: "Add a third guest testimonial here.", name: "Guest name", detail: "Room type" },
 ];
 
 export const nearbyAttractions = [{ name: "KNUST", distance: "2 min" }];

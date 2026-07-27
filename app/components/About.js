@@ -16,13 +16,13 @@ export default function About() {
             business and leisure traveler. Our restaurants serve special blends of oriental and African dishes:
             tasty Ghanaian recipes that have delighted many guests.
           </p>
-          <a href="#amenities" className={`${ctaBase} mt-8 gap-1.5 px-6 py-3 text-[0.85rem] tracking-[0.02em]`}>
+          <a href="#room-types" className={`${ctaBase} mt-8 gap-1.5 px-6 py-3 text-[0.85rem] tracking-[0.02em]`}>
             Learn More
             <ChevronRight />
           </a>
         </div>
 
-        <div className="relative aspect-[6/5] overflow-hidden rounded-2xl">
+        <div className="relative aspect-[6/5] overflow-hidden">
           <Image
             src="/images/poolside-garden.jpg"
             alt="Poolside garden with African relief mural"
