@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Footer() {
@@ -96,27 +97,24 @@ export default function Footer() {
           </p>
         </div>
         <div className="flex flex-col gap-[0.7rem] text-[0.82rem] tracking-[0.02em]">
-          <a href="#about" className="font-semibold text-white underline">
+          <Link href="/#about" className="font-semibold text-white underline">
             ABOUT
-          </a>
-          <a href="#room-types" className="font-semibold text-white underline">
+          </Link>
+          <Link href="/#room-types" className="font-semibold text-white underline">
             ROOMS
-          </a>
-          <a href="#leisure" className="font-semibold text-white underline">
+          </Link>
+          <Link href="/#leisure" className="font-semibold text-white underline">
             LEISURE
-          </a>
-          <a href="#gallery" className="font-semibold text-white underline">
+          </Link>
+          <Link href="/#gallery" className="font-semibold text-white underline">
             GALLERY
-          </a>
-          <a href="#contact" className="font-semibold text-white underline">
-            CONTACT
-          </a>
-          <a
-            href="#reservation"
+          </Link>
+          <Link
+            href="/reservation"
             className="font-semibold text-accent-soft underline transition-colors duration-200 hover:text-accent-hover"
           >
             BOOK NOW
-          </a>
+          </Link>
         </div>
       </div>
 

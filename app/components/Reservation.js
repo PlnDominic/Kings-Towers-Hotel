@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useBooking } from "./BookingContext";
 import { ctaBase, CtaArrow } from "./ui";
 
 const inputClass =
   "border border-[#d8d5cf] bg-white px-4 py-[0.85rem] text-[0.92rem] text-body placeholder:text-body/70";
 
-export default function Reservation() {
-  const { booking } = useBooking();
+export default function Reservation({ initialCheckIn = "", initialCheckOut = "", initialRoomType = "" }) {
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
   const [error, setError] = useState("");
 
@@ -39,7 +37,7 @@ export default function Reservation() {
   }
 
   return (
-    <section id="reservation" className="scroll-mt-20 bg-cream px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(4.5rem,12vh,9rem)]">
+    <section className="bg-cream px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(4.5rem,12vh,9rem)]">
       <div className="mx-auto max-w-[640px] text-center">
         <span className="font-mono-label text-[0.72rem] uppercase tracking-[0.22em] text-muted">Reservation</span>
         <h2 className="mt-[0.6rem] mb-0 font-display text-[clamp(1.9rem,3.6vw,2.5rem)] leading-[1.1]">
@@ -57,7 +55,7 @@ export default function Reservation() {
         </div>
       ) : (
         <form
-          key={`${booking.checkIn}-${booking.checkOut}-${booking.roomType}`}
+          key={`${initialCheckIn}-${initialCheckOut}-${initialRoomType}`}
           onSubmit={onSubmit}
           className="mx-auto mt-10 grid max-w-[640px] grid-cols-1 gap-4 min-[701px]:grid-cols-2"
         >
@@ -69,7 +67,7 @@ export default function Reservation() {
             type="date"
             name="checkIn"
             aria-label="Check-in"
-            defaultValue={booking.checkIn}
+            defaultValue={initialCheckIn}
             className={inputClass}
           />
           <input
@@ -77,13 +75,13 @@ export default function Reservation() {
             type="date"
             name="checkOut"
             aria-label="Check-out"
-            defaultValue={booking.checkOut}
+            defaultValue={initialCheckOut}
             className={inputClass}
           />
           <select
             required
             name="roomType"
-            defaultValue={booking.roomType}
+            defaultValue={initialRoomType}
             className={`${inputClass} min-[701px]:col-span-2`}
           >
             <option value="">Room type</option>

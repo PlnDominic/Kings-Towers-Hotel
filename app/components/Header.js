@@ -1,38 +1,47 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ctaBase, CtaArrow, navLinkClass } from "./ui";
 
+// Root-relative hashes ("/#about") rather than bare "#about": this header
+// also renders on /reservation, where a bare hash would just edit the URL
+// without navigating anywhere since that page has no matching id.
 const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#room-types", label: "Rooms" },
-  { href: "#leisure", label: "Leisure" },
-  { href: "#contact", label: "Contact" },
+  { href: "/#about", label: "About" },
+  { href: "/#room-types", label: "Rooms" },
+  { href: "/#leisure", label: "Leisure" },
 ];
 
 function NavLink({ href, label, onClick }) {
   return (
-    <a
+    <Link
       href={href}
       onClick={onClick}
       style={{ color: "inherit" }}
       className={`${navLinkClass} text-[0.82rem] tracking-[0.04em]`}
     >
       {label}
-    </a>
+    </Link>
   );
 }
 
-export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
+// `transparentAtTop`: only the homepage has a dark photo hero behind the
+// header at scroll position 0, so only it should start in the
+// transparent/white-text state. Every other page is plain white up top —
+// starting transparent there renders white-on-white nav text until the
+// user scrolls past 40px.
+export default function Header({ transparentAtTop = false }) {
+  const [scrolled, setScrolled] = useState(!transparentAtTop);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
+    if (!transparentAtTop) return;
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [transparentAtTop]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -62,7 +71,7 @@ export default function Header() {
         }}
       >
         <div className="hidden items-center gap-[1.9rem] min-[880px]:flex">
-          {navLinks.slice(0, 3).map((l) => (
+          {navLinks.map((l) => (
             <NavLink key={l.href} {...l} />
           ))}
         </div>
@@ -76,11 +85,13 @@ export default function Header() {
 
         <div className="flex items-center justify-end gap-[1.1rem]">
           <div className="hidden items-center gap-[1.1rem] min-[880px]:flex">
-            <NavLink href="#contact" label="Contact" />
-            <a href="#reservation" className={`${ctaBase} rounded-full px-[1.1rem] py-2 text-[0.78rem] tracking-[0.04em]`}>
+            <Link
+              href="/reservation"
+              className={`${ctaBase} rounded-full px-[1.1rem] py-2 text-[0.78rem] tracking-[0.04em]`}
+            >
               Book Now
               <CtaArrow />
-            </a>
+            </Link>
           </div>
 
           <button
@@ -119,23 +130,23 @@ export default function Header() {
         }`}
       >
         {navLinks.map((l) => (
-          <a
+          <Link
             key={l.href}
             href={l.href}
             onClick={() => setMenuOpen(false)}
             className="border-b border-ink/10 py-3 text-[0.95rem] font-medium text-ink no-underline last:border-0"
           >
             {l.label}
-          </a>
+          </Link>
         ))}
-        <a
-          href="#reservation"
+        <Link
+          href="/reservation"
           onClick={() => setMenuOpen(false)}
           className={`${ctaBase} my-3 rounded-full px-[1.1rem] py-3 text-[0.85rem] tracking-[0.04em]`}
         >
           Book Now
           <CtaArrow />
-        </a>
+        </Link>
       </div>
     </header>
   );

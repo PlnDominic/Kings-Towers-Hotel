@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { heroImages } from "../data";
-import { useBooking } from "./BookingContext";
 import { ctaBase, CtaArrow } from "./ui";
 
 // "Liquid glass": translucent + blurred + saturated, with a bright inset
@@ -16,15 +17,18 @@ const fieldClass =
   "min-w-0 flex-1 border-b border-white/15 bg-transparent px-4 py-2.5 text-[0.82rem] text-white [color-scheme:dark] placeholder:text-white/60 focus:bg-white/10 focus:outline-none min-[700px]:border-b-0 min-[700px]:border-r";
 
 function BookingContainer() {
-  const { booking, setBooking } = useBooking();
-  const [checkIn, setCheckIn] = useState(booking.checkIn);
-  const [checkOut, setCheckOut] = useState(booking.checkOut);
-  const [roomType, setRoomType] = useState(booking.roomType);
+  const router = useRouter();
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [roomType, setRoomType] = useState("");
 
   function onSubmit(e) {
     e.preventDefault();
-    setBooking({ checkIn, checkOut, roomType });
-    document.getElementById("reservation")?.scrollIntoView({ behavior: "smooth" });
+    const params = new URLSearchParams();
+    if (checkIn) params.set("checkIn", checkIn);
+    if (checkOut) params.set("checkOut", checkOut);
+    if (roomType) params.set("roomType", roomType);
+    router.push(`/reservation?${params.toString()}`);
   }
 
   return (
@@ -122,10 +126,10 @@ export default function Hero() {
         <h1 className="m-0 max-w-[20ch] font-display text-[clamp(3rem,7.2vw,5rem)] leading-[1.02] font-bold tracking-[0.01em] text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.4)]">
           Kings Towers Hotel
         </h1>
-        <a href="#reservation" className={`${ctaBase} whitespace-nowrap px-[1.9rem] py-[0.95rem] text-[0.9rem] tracking-[0.02em]`}>
+        <Link href="/reservation" className={`${ctaBase} whitespace-nowrap px-[1.9rem] py-[0.95rem] text-[0.9rem] tracking-[0.02em]`}>
           Book Now
           <CtaArrow />
-        </a>
+        </Link>
         <div className="mt-4">
           <BookingContainer />
         </div>
