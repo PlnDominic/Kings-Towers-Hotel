@@ -38,10 +38,29 @@ body {
   }
 }
 
+@keyframes kt-nav-in {
+  from {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.kt-nav-in {
+  animation: kt-nav-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kt-reveal {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+  .kt-nav-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

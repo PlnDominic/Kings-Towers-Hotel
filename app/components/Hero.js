@@ -10,7 +10,7 @@ import { ctaBase, CtaArrow } from "./ui";
 // edge along the top (where light would catch a glass rim) fading to
 // almost nothing at the bottom, plus a soft outer shadow for lift.
 const glassClass =
-  "self-start flex w-full max-w-md flex-col overflow-hidden rounded-2xl border border-white/25 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_-1px_1px_rgba(255,255,255,0.05)] backdrop-blur-xl backdrop-saturate-150 min-[700px]:w-auto min-[700px]:max-w-none min-[700px]:flex-row min-[700px]:items-stretch";
+  "mx-auto flex w-full max-w-md flex-col self-center overflow-hidden rounded-2xl border border-white/25 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_-1px_1px_rgba(255,255,255,0.05)] backdrop-blur-xl backdrop-saturate-150 min-[700px]:w-auto min-[700px]:max-w-none min-[700px]:flex-row min-[700px]:items-stretch";
 
 const fieldClass =
   "min-w-0 flex-1 border-b border-white/15 bg-transparent px-4 py-2.5 text-[0.82rem] text-white [color-scheme:dark] placeholder:text-white/60 focus:bg-white/10 focus:outline-none min-[700px]:border-b-0 min-[700px]:border-r";
@@ -112,12 +112,12 @@ export default function Hero() {
       />
 
       <div className="relative flex w-full flex-col justify-between px-[clamp(1.25rem,5vw,5.5rem)] pt-[calc(80px+3vh)] pb-[clamp(3rem,7vh,6rem)] text-white">
-        <p className="mt-[clamp(2rem,8vh,6rem)] max-w-[34ch] text-[1.02rem] leading-[1.6] text-white/[0.94] [text-shadow:0_1px_18px_rgba(0,0,0,0.25)]">
+        <p className="mt-[clamp(2rem,8vh,6rem)] max-w-[34ch] text-[1.02rem] leading-[1.6] text-white [text-shadow:0_1px_18px_rgba(0,0,0,0.35)]">
           A serene, scenic retreat in Ahensan Estate, Kumasi, switched off from the din of the outside world.
         </p>
         <div className="flex flex-col gap-6">
           <div className="flex flex-wrap items-end justify-between gap-8">
-            <h1 className="m-0 max-w-[20ch] font-display text-[clamp(3rem,7.2vw,5rem)] leading-[1.02] font-bold tracking-[0.01em] text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.3)]">
+            <h1 className="m-0 max-w-[20ch] font-display text-[clamp(3rem,7.2vw,5rem)] leading-[1.02] font-bold tracking-[0.01em] text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.4)]">
               Kings Towers Hotel
             </h1>
             <a href="#reservation" className={`${ctaBase} whitespace-nowrap px-[1.9rem] py-[0.95rem] text-[0.9rem] tracking-[0.02em]`}>
