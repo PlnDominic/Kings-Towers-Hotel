@@ -111,20 +111,18 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative flex w-full flex-col justify-between px-[clamp(1.25rem,5vw,5.5rem)] pt-[calc(80px+3vh)] pb-[clamp(3rem,7vh,6rem)] text-white">
-        <p className="mt-[clamp(2rem,8vh,6rem)] max-w-[34ch] text-[1.02rem] leading-[1.6] text-white [text-shadow:0_1px_18px_rgba(0,0,0,0.35)]">
+      <div className="relative flex w-full flex-col items-center justify-center gap-6 px-[clamp(1.25rem,5vw,5.5rem)] pt-24 pb-[clamp(3rem,7vh,6rem)] text-center text-white">
+        <p className="max-w-[34ch] text-[1.02rem] leading-[1.6] text-white [text-shadow:0_1px_18px_rgba(0,0,0,0.35)]">
           A serene, scenic retreat in Ahensan Estate, Kumasi, switched off from the din of the outside world.
         </p>
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-wrap items-end justify-between gap-8">
-            <h1 className="m-0 max-w-[20ch] font-display text-[clamp(3rem,7.2vw,5rem)] leading-[1.02] font-bold tracking-[0.01em] text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.4)]">
-              Kings Towers Hotel
-            </h1>
-            <a href="#reservation" className={`${ctaBase} whitespace-nowrap px-[1.9rem] py-[0.95rem] text-[0.9rem] tracking-[0.02em]`}>
-              Book Now
-              <CtaArrow />
-            </a>
-          </div>
+        <h1 className="m-0 max-w-[20ch] font-display text-[clamp(3rem,7.2vw,5rem)] leading-[1.02] font-bold tracking-[0.01em] text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.4)]">
+          Kings Towers Hotel
+        </h1>
+        <a href="#reservation" className={`${ctaBase} whitespace-nowrap px-[1.9rem] py-[0.95rem] text-[0.9rem] tracking-[0.02em]`}>
+          Book Now
+          <CtaArrow />
+        </a>
+        <div className="mt-4">
           <BookingContainer />
         </div>
       </div>
