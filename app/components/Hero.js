@@ -6,8 +6,14 @@ import { heroImages } from "../data";
 import { useBooking } from "./BookingContext";
 import { ctaBase, CtaArrow } from "./ui";
 
-const bookingInputClass =
-  "border border-hairline bg-cream px-4 py-3 text-[0.88rem] text-ink placeholder:text-muted";
+// "Liquid glass": translucent + blurred + saturated, with a bright inset
+// edge along the top (where light would catch a glass rim) fading to
+// almost nothing at the bottom, plus a soft outer shadow for lift.
+const glassClass =
+  "self-start flex w-full max-w-md flex-col overflow-hidden rounded-2xl border border-white/25 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_-1px_1px_rgba(255,255,255,0.05)] backdrop-blur-xl backdrop-saturate-150 min-[700px]:w-auto min-[700px]:max-w-none min-[700px]:flex-row min-[700px]:items-stretch";
+
+const fieldClass =
+  "min-w-0 flex-1 border-b border-white/15 bg-transparent px-4 py-2.5 text-[0.82rem] text-white [color-scheme:dark] placeholder:text-white/60 focus:bg-white/10 focus:outline-none min-[700px]:border-b-0 min-[700px]:border-r";
 
 function BookingContainer() {
   const { booking, setBooking } = useBooking();
@@ -22,44 +28,33 @@ function BookingContainer() {
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="grid grid-cols-1 gap-3 border border-white/20 bg-white/95 p-4 backdrop-blur-sm min-[700px]:grid-cols-[1fr_1fr_1fr_auto] min-[700px]:items-end min-[700px]:gap-3"
-    >
-      <label className="flex flex-col gap-1 text-[0.72rem] font-semibold tracking-[0.04em] text-muted">
-        CHECK-IN
-        <input
-          type="date"
-          value={checkIn}
-          onChange={(e) => setCheckIn(e.target.value)}
-          className={bookingInputClass}
-        />
-      </label>
-      <label className="flex flex-col gap-1 text-[0.72rem] font-semibold tracking-[0.04em] text-muted">
-        CHECK-OUT
-        <input
-          type="date"
-          value={checkOut}
-          onChange={(e) => setCheckOut(e.target.value)}
-          className={bookingInputClass}
-        />
-      </label>
-      <label className="flex flex-col gap-1 text-[0.72rem] font-semibold tracking-[0.04em] text-muted">
-        ROOM TYPE
-        <select
-          value={roomType}
-          onChange={(e) => setRoomType(e.target.value)}
-          className={bookingInputClass}
-        >
-          <option value="">Any room</option>
-          <option value="standard">Standard Room</option>
-          <option value="queen">Queen Room</option>
-          <option value="twin">Twin Room</option>
-          <option value="mini-suite">Mini Suite</option>
-        </select>
-      </label>
-      <button type="submit" className={`${ctaBase} whitespace-nowrap px-[1.9rem] py-3 text-[0.9rem] tracking-[0.02em]`}>
-        Check Availability
+    <form onSubmit={onSubmit} className={glassClass}>
+      <input
+        type="date"
+        aria-label="Check-in"
+        value={checkIn}
+        onChange={(e) => setCheckIn(e.target.value)}
+        className={fieldClass}
+      />
+      <input
+        type="date"
+        aria-label="Check-out"
+        value={checkOut}
+        onChange={(e) => setCheckOut(e.target.value)}
+        className={fieldClass}
+      />
+      <select aria-label="Room type" value={roomType} onChange={(e) => setRoomType(e.target.value)} className={fieldClass}>
+        <option value="">Any room</option>
+        <option value="standard">Standard Room</option>
+        <option value="queen">Queen Room</option>
+        <option value="twin">Twin Room</option>
+        <option value="mini-suite">Mini Suite</option>
+      </select>
+      <button
+        type="submit"
+        className={`${ctaBase} whitespace-nowrap px-5 py-2.5 text-[0.82rem] tracking-[0.02em] hover:translate-y-0 hover:shadow-none`}
+      >
+        Check
         <CtaArrow />
       </button>
     </form>
