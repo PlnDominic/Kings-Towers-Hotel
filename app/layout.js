@@ -1,10 +1,16 @@
-import { Assistant, Merriweather_Sans, Anonymous_Pro } from "next/font/google";
+import { Assistant, Merriweather_Sans, Anonymous_Pro, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const assistant = Assistant({
   variable: "--font-assistant",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+});
+
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair-display",
+  subsets: ["latin"],
+  weight: ["500", "600"],
 });
 
 const merriweatherSans = Merriweather_Sans({
@@ -29,7 +35,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${assistant.variable} ${merriweatherSans.variable} ${anonymousPro.variable}`}
+      className={`${assistant.variable} ${merriweatherSans.variable} ${anonymousPro.variable} ${playfairDisplay.variable}`}
     >
       <body>{children}</body>
     </html>

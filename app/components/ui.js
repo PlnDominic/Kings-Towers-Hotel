@@ -11,6 +11,25 @@ export function CtaArrow() {
   );
 }
 
+export function ChevronRight() {
+  return (
+    <svg
+      aria-hidden="true"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="transition-transform duration-200 ease-out group-hover:translate-x-1"
+    >
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  );
+}
+
 // Underlined text-link nav item with a hover underline that draws in from
 // the left. Color is left to the caller (an inline `style={{color:"inherit"}}`
 // beats the project-wide `a { color: accent }` rule reliably, whereas the

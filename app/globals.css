@@ -4,6 +4,7 @@
   --font-assistant: var(--font-assistant), system-ui, sans-serif;
   --font-display: var(--font-merriweather-sans), system-ui, sans-serif;
   --font-mono-label: var(--font-anonymous-pro), ui-monospace, monospace;
+  --font-serif-display: var(--font-playfair-display), Georgia, serif;
 
   --color-ink: #16181f;
   --color-body: #4c515d;
