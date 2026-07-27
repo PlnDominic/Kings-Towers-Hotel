@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useBooking } from "./BookingContext";
 
 const inputClass =
   "border border-[#d8d5cf] bg-white px-4 py-[0.85rem] text-[0.92rem] text-body placeholder:text-body/70";
 
 export default function Reservation() {
+  const { booking } = useBooking();
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
   const [error, setError] = useState("");
 
@@ -54,15 +56,35 @@ export default function Reservation() {
         </div>
       ) : (
         <form
+          key={`${booking.checkIn}-${booking.checkOut}-${booking.roomType}`}
           onSubmit={onSubmit}
           className="mx-auto mt-10 grid max-w-[640px] grid-cols-1 gap-4 min-[701px]:grid-cols-2"
         >
           <input required name="name" placeholder="Full name" className={`${inputClass} min-[701px]:col-span-2`} />
           <input required type="email" name="email" placeholder="Email" className={inputClass} />
           <input required type="tel" name="phone" placeholder="Phone" className={inputClass} />
-          <input required type="date" name="checkIn" aria-label="Check-in" className={inputClass} />
-          <input required type="date" name="checkOut" aria-label="Check-out" className={inputClass} />
-          <select required name="roomType" defaultValue="" className={`${inputClass} min-[701px]:col-span-2`}>
+          <input
+            required
+            type="date"
+            name="checkIn"
+            aria-label="Check-in"
+            defaultValue={booking.checkIn}
+            className={inputClass}
+          />
+          <input
+            required
+            type="date"
+            name="checkOut"
+            aria-label="Check-out"
+            defaultValue={booking.checkOut}
+            className={inputClass}
+          />
+          <select
+            required
+            name="roomType"
+            defaultValue={booking.roomType}
+            className={`${inputClass} min-[701px]:col-span-2`}
+          >
             <option value="">Room type</option>
             <option value="standard">Standard Room — GHS 425/night</option>
             <option value="queen">Queen Room — GHS 525/night</option>

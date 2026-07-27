@@ -1,5 +1,6 @@
 import About from "./components/About";
 import Amenities from "./components/Amenities";
+import { BookingProvider } from "./components/BookingContext";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Gallery from "./components/Gallery";
@@ -12,7 +13,7 @@ import Rooms from "./components/Rooms";
 
 export default function Home() {
   return (
-    <>
+    <BookingProvider>
       <Header />
       <Hero />
       <About />
@@ -24,6 +25,6 @@ export default function Home() {
       <Contact />
       <Reservation />
       <Footer />
-    </>
+    </BookingProvider>
   );
 }
