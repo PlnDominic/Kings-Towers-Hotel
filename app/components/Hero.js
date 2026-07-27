@@ -103,11 +103,15 @@ export default function Hero() {
         ))}
       </div>
 
+      {/* The old top/bottom-only gradient faded to 0 opacity through the
+          middle band — fine when the text sat at the top and bottom edges,
+          but the hero content is now centered, so it needs a scrim that
+          stays dark through the middle instead of vanishing exactly there. */}
       <div
         className="absolute inset-0 -z-10"
         style={{
           background:
-            "linear-gradient(180deg, rgba(20,22,28,0.34) 0%, rgba(20,22,28,0) 30%), linear-gradient(0deg, rgba(20,22,28,0.4) 0%, rgba(20,22,28,0) 46%)",
+            "linear-gradient(180deg, rgba(15,17,22,0.5) 0%, rgba(15,17,22,0.4) 50%, rgba(15,17,22,0.55) 100%)",
         }}
       />
 
