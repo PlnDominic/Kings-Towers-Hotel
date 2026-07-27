@@ -28,7 +28,10 @@ function RoomCard({ room }) {
         </div>
         <p className="mt-[0.6rem] text-[0.9rem] leading-[1.6] text-body">{room.desc}</p>
         <p className="mt-[0.9rem] text-[0.76rem] leading-[1.6] tracking-[0.03em] text-muted">{room.features}</p>
-        <a href="#reservation" className="mt-[1.1rem] inline-block text-[0.82rem] font-semibold text-accent underline">
+        <a
+          href="#reservation"
+          className="mt-[1.1rem] inline-block text-[0.82rem] font-semibold text-accent underline transition-colors duration-200 hover:text-accent-hover"
+        >
           Reserve this room
         </a>
       </div>

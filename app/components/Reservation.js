@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useBooking } from "./BookingContext";
+import { ctaBase, CtaArrow } from "./ui";
 
 const inputClass =
   "border border-[#d8d5cf] bg-white px-4 py-[0.85rem] text-[0.92rem] text-body placeholder:text-body/70";
@@ -100,9 +101,10 @@ export default function Reservation() {
           <button
             type="submit"
             disabled={status === "sending"}
-            className="border-0 bg-accent px-4 py-4 text-[0.92rem] font-semibold tracking-[0.02em] text-white disabled:opacity-60 min-[701px]:col-span-2"
+            className={`${ctaBase} px-4 py-4 text-[0.92rem] tracking-[0.02em] min-[701px]:col-span-2`}
           >
             {status === "sending" ? "Sending…" : "Request Booking"}
+            {status !== "sending" && <CtaArrow />}
           </button>
           {status === "error" && (
             <p className="text-[0.85rem] text-red-600 min-[701px]:col-span-2">{error}</p>

@@ -111,7 +111,10 @@ export default function Footer() {
           <a href="#contact" className="font-semibold text-white underline">
             CONTACT
           </a>
-          <a href="#reservation" className="font-semibold text-accent-soft underline">
+          <a
+            href="#reservation"
+            className="font-semibold text-accent-soft underline transition-colors duration-200 hover:text-accent-hover"
+          >
             BOOK NOW
           </a>
         </div>

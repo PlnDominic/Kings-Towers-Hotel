@@ -17,13 +17,13 @@ export default function Contact() {
             P.O. Box 5722, Kumasi
           </p>
           <div className="mt-7 flex flex-col gap-2">
-            <a href="tel:+2335129308" className="text-[0.98rem] text-accent no-underline">
+            <a href="tel:+2335129308" className="text-[0.98rem] text-accent no-underline transition-colors duration-200 hover:text-accent-hover">
               Tel: +233 51 29 308
             </a>
-            <a href="tel:+233242535631" className="text-[0.98rem] text-accent no-underline">
+            <a href="tel:+233242535631" className="text-[0.98rem] text-accent no-underline transition-colors duration-200 hover:text-accent-hover">
               Cell: +233 24 25 35 631
             </a>
-            <a href="mailto:kingsthl@yahoo.com" className="text-[0.98rem] text-accent no-underline">
+            <a href="mailto:kingsthl@yahoo.com" className="text-[0.98rem] text-accent no-underline transition-colors duration-200 hover:text-accent-hover">
               kingsthl@yahoo.com
             </a>
           </div>

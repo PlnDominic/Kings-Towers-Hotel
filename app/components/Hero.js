@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { heroImages } from "../data";
 import { useBooking } from "./BookingContext";
+import { ctaBase, CtaArrow } from "./ui";
 
 const bookingInputClass =
   "border border-hairline bg-cream px-4 py-3 text-[0.88rem] text-ink placeholder:text-muted";
@@ -57,11 +58,9 @@ function BookingContainer() {
           <option value="mini-suite">Mini Suite</option>
         </select>
       </label>
-      <button
-        type="submit"
-        className="whitespace-nowrap border-0 bg-accent px-[1.9rem] py-3 text-[0.9rem] font-semibold tracking-[0.02em] text-white"
-      >
+      <button type="submit" className={`${ctaBase} whitespace-nowrap px-[1.9rem] py-3 text-[0.9rem] tracking-[0.02em]`}>
         Check Availability
+        <CtaArrow />
       </button>
     </form>
   );
@@ -126,11 +125,9 @@ export default function Hero() {
             <h1 className="m-0 max-w-[20ch] font-display text-[clamp(3rem,7.2vw,5rem)] leading-[1.02] font-bold tracking-[0.01em] text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.3)]">
               Kings Towers Hotel
             </h1>
-            <a
-              href="#reservation"
-              className="whitespace-nowrap bg-accent px-[1.9rem] py-[0.95rem] text-[0.9rem] font-semibold tracking-[0.02em] text-white no-underline"
-            >
+            <a href="#reservation" className={`${ctaBase} whitespace-nowrap px-[1.9rem] py-[0.95rem] text-[0.9rem] tracking-[0.02em]`}>
               Book Now
+              <CtaArrow />
             </a>
           </div>
           <BookingContainer />
