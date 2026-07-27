@@ -38,17 +38,6 @@ export default function Contact() {
               </li>
             ))}
           </ul>
-          <div className="mt-7 overflow-hidden border border-hairline">
-            <iframe
-              title="Map to Kings Towers Hotel, Ahensan Estate, Kumasi"
-              src="https://www.google.com/maps?q=Ahensan+Estate,+Kumasi,+Ghana&output=embed"
-              width="100%"
-              height="260"
-              className="block border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
         </div>
         <div className="border border-hairline bg-white p-[clamp(2rem,4vw,3rem)]">
           <h3 className="m-0 mb-5 font-display text-[1.1rem]">Getting Here</h3>
