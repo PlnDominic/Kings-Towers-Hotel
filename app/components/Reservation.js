@@ -148,10 +148,10 @@ export default function Reservation({
     <>
       {/* Arrival banner — same photographic language as the hero, so booking
           feels like a continuation of the site rather than a bolted-on form. */}
-      <section className="relative isolate flex min-h-[38svh] items-center justify-center overflow-hidden text-center min-[880px]:min-h-[42svh]">
+      <section className="relative isolate flex min-h-[26svh] items-center justify-center overflow-hidden text-center min-[880px]:min-h-[30svh]">
         <Image
-          src="/images/pool-waterfall.jpg"
-          alt="Kings Towers Hotel"
+          src="/images/room-queen.jpg"
+          alt="Queen Room with wood ceiling and orange curtains"
           fill
           priority
           sizes="100vw"
