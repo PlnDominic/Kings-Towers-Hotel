@@ -16,8 +16,8 @@ export default async function ReservationPage({ searchParams }) {
 
   return (
     <>
-      <Header />
-      <main className="bg-white pt-24">
+      <Header transparentAtTop />
+      <main className="bg-white">
         <Reservation
           initialCheckIn={paramString(params.checkIn)}
           initialCheckOut={paramString(params.checkOut)}
