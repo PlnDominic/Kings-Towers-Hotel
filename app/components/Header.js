@@ -219,10 +219,10 @@ export default function Header({ transparentAtTop = false }) {
             <CtaArrow />
           </Link>
           <a
-            href="tel:+2335129308"
+            href="tel:+233208888123"
             className="mt-4 block text-center font-mono-label text-[0.78rem] tracking-[0.06em] text-muted no-underline hover:text-accent"
           >
-            Call us · +233 51 29 308
+            Call us · 020 888 8123
           </a>
         </div>
       </div>

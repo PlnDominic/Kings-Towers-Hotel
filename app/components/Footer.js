@@ -93,7 +93,7 @@ export default function Footer() {
           <p className="mt-4 text-[0.88rem] leading-[1.7] text-white/85">
             kingsthl@yahoo.com
             <br />
-            T: +233 51 29 308
+            T: 020 888 8123
           </p>
         </div>
         <div className="flex flex-col gap-[0.7rem] text-[0.82rem] tracking-[0.02em]">
@@ -118,6 +118,14 @@ export default function Footer() {
       <div className="mx-auto mt-12 flex max-w-[1100px] flex-wrap justify-between gap-4 border-t border-white/15 py-[1.6rem] text-[0.72rem] tracking-[0.03em] text-white/60">
         <span>ALL RIGHTS RESERVED KINGS TOWERS HOTEL</span>
         <span>Ahensan Estate, Kumasi, Ghana</span>
+        <a
+          href="https://www.ecstasytechnologies.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white/60 no-underline transition-colors duration-200 hover:text-accent-soft"
+        >
+          Developed by Ecstasy Technologies
+        </a>
       </div>
     </footer>
   );

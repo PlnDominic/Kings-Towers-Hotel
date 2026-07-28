@@ -223,7 +223,7 @@ function BookingCard() {
           </p>
           <div className="flex shrink-0 gap-3">
             <a
-              href="tel:+2335129308"
+              href="tel:+233208888123"
               className="group relative inline-flex items-center justify-center gap-2 rounded-full border border-accent bg-transparent px-5 py-2.5 text-[0.85rem] font-semibold text-accent no-underline transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-accent hover:text-white"
             >
               Call Us
