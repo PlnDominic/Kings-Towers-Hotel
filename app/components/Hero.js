@@ -7,14 +7,16 @@ import { useEffect, useState } from "react";
 import { heroImages } from "../data";
 import { ctaBase, CtaArrow } from "./ui";
 
-// "Liquid glass": translucent + blurred + saturated, with a bright inset
-// edge along the top (where light would catch a glass rim) fading to
-// almost nothing at the bottom, plus a soft outer shadow for lift.
-const glassClass =
-  "mx-auto flex w-full max-w-md flex-col self-center overflow-hidden border border-white/25 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_-1px_1px_rgba(255,255,255,0.05)] backdrop-blur-xl backdrop-saturate-150 min-[700px]:w-auto min-[700px]:max-w-none min-[700px]:flex-row min-[700px]:items-stretch";
+// Solid, opaque booking bar — no blur or translucency. A crisp near-black
+// panel with a bright accent top edge, matching the dark-panel language
+// used for transactional UI elsewhere on the site (booking calendar,
+// checkout summary): dark panel = "do a thing here," cream/white = editorial
+// content.
+const barClass =
+  "mx-auto flex w-full max-w-md flex-col self-center overflow-hidden border-t-2 border-accent bg-near-black shadow-[0_20px_45px_-15px_rgba(0,0,0,0.55)] min-[700px]:w-auto min-[700px]:max-w-none min-[700px]:flex-row min-[700px]:items-stretch";
 
 const fieldClass =
-  "min-w-0 flex-1 border-b border-white/15 bg-transparent px-4 py-2.5 text-[0.82rem] text-white [color-scheme:dark] placeholder:text-white/60 focus:bg-white/10 focus:outline-none min-[700px]:border-b-0 min-[700px]:border-r";
+  "min-w-0 flex-1 border-b border-white/12 bg-transparent px-4 py-3 text-[0.82rem] text-white [color-scheme:dark] placeholder:text-white/60 transition-colors duration-200 focus:bg-white/[0.06] focus:outline-none min-[700px]:border-b-0 min-[700px]:border-r min-[700px]:border-r-white/12";
 
 function BookingContainer() {
   const router = useRouter();
@@ -32,7 +34,7 @@ function BookingContainer() {
   }
 
   return (
-    <form onSubmit={onSubmit} className={glassClass}>
+    <form onSubmit={onSubmit} className={barClass}>
       <input
         type="date"
         aria-label="Check-in"

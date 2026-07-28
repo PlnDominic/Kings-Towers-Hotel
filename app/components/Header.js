@@ -94,22 +94,20 @@ export default function Header({ transparentAtTop = false }) {
   const textColor = scrolled ? "var(--color-ink)" : "#ffffff";
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[100] flex justify-center px-4 pt-4 min-[880px]:px-6">
-      {/* Floating glass bar: brand mark left, primary nav centered, actions
-          right — a conventional, highly scannable layout. Opacity/border/
-          shadow shift once the page scrolls onto light content, where the
-          same translucent tint would otherwise wash out. */}
-      <div
-        className="kt-nav-in grid w-full max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-6 border px-5 py-3 backdrop-blur-xl backdrop-saturate-150 transition-[background,border-color,box-shadow,color] duration-500"
-        style={{
-          background: scrolled ? "rgba(255,255,255,0.78)" : "rgba(12,13,16,0.28)",
-          borderColor: scrolled ? "rgba(22,24,31,0.08)" : "rgba(255,255,255,0.28)",
-          boxShadow: scrolled
-            ? "0 8px 30px rgba(22,24,31,0.1), inset 0 1px 1px rgba(255,255,255,0.7)"
-            : "0 8px 30px rgba(0,0,0,0.28), inset 0 1px 1px rgba(255,255,255,0.35)",
-          color: textColor,
-        }}
-      >
+    <header
+      className="fixed inset-x-0 top-0 z-[100] transition-[background-color,border-color,box-shadow] duration-400"
+      style={{
+        background: scrolled ? "var(--color-cream)" : "transparent",
+        borderBottom: scrolled ? "1px solid var(--color-hairline)" : "1px solid transparent",
+        boxShadow: scrolled ? "0 12px 30px -20px rgba(22,24,31,0.25)" : "none",
+        color: textColor,
+      }}
+    >
+      {/* Full-width, edge-to-edge bar — solid and opaque, not a floating
+          glass panel. Brand mark left, primary nav centered, actions right.
+          The entrance animation lives here (not on <header>) so it doesn't
+          give the fixed-position mobile drawer a collapsed containing block. */}
+      <div className="kt-nav-in mx-auto grid max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-6 px-5 py-4 min-[880px]:px-8">
         <Wordmark />
 
         <nav className="hidden items-center justify-center gap-9 min-[880px]:flex">
@@ -154,7 +152,7 @@ export default function Header({ transparentAtTop = false }) {
       <div
         aria-hidden={!menuOpen}
         onClick={() => setMenuOpen(false)}
-        className={`fixed inset-0 z-[98] bg-black/50 backdrop-blur-sm transition-opacity duration-300 min-[880px]:hidden ${
+        className={`fixed inset-0 z-[98] bg-black/55 transition-opacity duration-300 min-[880px]:hidden ${
           menuOpen ? "visible opacity-100" : "invisible opacity-0"
         }`}
       />
