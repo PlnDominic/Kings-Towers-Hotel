@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { amenities, heroImages } from "../data";
+import { heroImages } from "../data";
 import { pillBase, pillOutlineBase } from "./ui";
 
 const fieldButtonClass =
@@ -238,25 +238,6 @@ function BookingCard() {
   );
 }
 
-function TrustRow() {
-  return (
-    <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-[clamp(1.25rem,5vw,3rem)] py-[clamp(3rem,7vh,5rem)] min-[640px]:grid-cols-2 min-[1080px]:grid-cols-4">
-      {amenities.map((a) => (
-        <div key={a.title} className="flex items-start gap-4">
-          <div
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent"
-            dangerouslySetInnerHTML={{ __html: a.icon }}
-          />
-          <div>
-            <h3 className="m-0 font-display text-[0.98rem] font-bold text-ink">{a.title}</h3>
-            <p className="m-0 mt-1.5 text-[0.85rem] leading-[1.6] text-body">{a.desc}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export default function Hero() {
   const [index, setIndex] = useState(0);
 
@@ -331,11 +312,9 @@ export default function Hero() {
 
       {/* The booking card overlaps the bottom edge of the photo — it lives
           outside the hero's own overflow-hidden section so it isn't clipped. */}
-      <div className="relative z-20 -mt-14 px-[clamp(1rem,4vw,3rem)] min-[880px]:-mt-16">
+      <div className="relative z-20 -mt-14 px-[clamp(1rem,4vw,3rem)] pb-[clamp(3rem,7vh,5rem)] min-[880px]:-mt-16">
         <BookingCard />
       </div>
-
-      <TrustRow />
     </>
   );
 }
