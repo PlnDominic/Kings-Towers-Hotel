@@ -1,11 +1,7 @@
+import { rooms } from "@/app/data";
 import { sendMail } from "@/lib/mailer";
 
-const ROOM_LABELS = {
-  standard: "Standard Room — GHS 425/night",
-  queen: "Queen Room — GHS 525/night",
-  twin: "Twin Room — GHS 745/night",
-  "mini-suite": "Mini Suite — GHS 695/night",
-};
+const ROOM_LABELS = Object.fromEntries(rooms.map((r) => [r.id, `${r.title} — GHS ${r.price}/night`]));
 
 // Header values (used in From/Reply-To/Subject) must not contain CR/LF,
 // otherwise user input could inject extra mail headers.
@@ -29,7 +25,7 @@ export async function POST(request) {
     return Response.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, email, phone, checkIn, checkOut, roomType, message } = body || {};
+  const { name, email, phone, checkIn, checkOut, roomType, guests, nights, estimatedTotal, message } = body || {};
 
   if (!name || !email || !phone || !checkIn || !checkOut || !roomType) {
     return Response.json({ error: "Please fill in all required fields." }, { status: 400 });
@@ -41,6 +37,7 @@ export async function POST(request) {
   const safeName = sanitizeHeaderValue(name);
   const safeEmail = sanitizeHeaderValue(email);
   const roomLabel = ROOM_LABELS[roomType] || sanitizeHeaderValue(roomType);
+  const stayLabel = nights ? `${nights} night${Number(nights) > 1 ? "s" : ""}` : null;
 
   const text = [
     `New reservation request from the Kings Towers Hotel website`,
@@ -50,7 +47,10 @@ export async function POST(request) {
     `Phone: ${phone}`,
     `Check-in: ${checkIn}`,
     `Check-out: ${checkOut}`,
+    stayLabel ? `Stay length: ${stayLabel}` : null,
+    guests ? `Guests: ${guests}` : null,
     `Room type: ${roomLabel}`,
+    estimatedTotal ? `Estimated total: GHS ${estimatedTotal}` : null,
     message ? `Message: ${message}` : null,
   ]
     .filter(Boolean)
@@ -64,7 +64,10 @@ export async function POST(request) {
       <tr><td><strong>Phone</strong></td><td>${escapeHtml(phone)}</td></tr>
       <tr><td><strong>Check-in</strong></td><td>${escapeHtml(checkIn)}</td></tr>
       <tr><td><strong>Check-out</strong></td><td>${escapeHtml(checkOut)}</td></tr>
+      ${stayLabel ? `<tr><td><strong>Stay length</strong></td><td>${escapeHtml(stayLabel)}</td></tr>` : ""}
+      ${guests ? `<tr><td><strong>Guests</strong></td><td>${escapeHtml(guests)}</td></tr>` : ""}
       <tr><td><strong>Room type</strong></td><td>${escapeHtml(roomLabel)}</td></tr>
+      ${estimatedTotal ? `<tr><td><strong>Estimated total</strong></td><td>GHS ${escapeHtml(estimatedTotal)}</td></tr>` : ""}
       ${message ? `<tr><td><strong>Message</strong></td><td>${escapeHtml(message)}</td></tr>` : ""}
     </table>
   `;
