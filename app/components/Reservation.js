@@ -4,18 +4,77 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import { rooms } from "../data";
 import { ctaBase, CtaArrow } from "./ui";
+import BookingCalendar from "./BookingCalendar";
 
 const inputClass =
   "w-full border border-hairline bg-white px-4 py-[0.85rem] text-[0.92rem] text-ink placeholder:text-muted transition-colors duration-200 focus:border-accent focus:outline-none";
 
 const labelClass = "mb-2 block font-mono-label text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-muted";
 
-function StepLabel({ n, children }) {
+const STEPS = [
+  { n: 1, label: "Select Date" },
+  { n: 2, label: "Select Room" },
+  { n: 3, label: "Your Details" },
+  { n: 4, label: "Complete" },
+];
+
+function StepBar({ step }) {
   return (
-    <div className="mb-6 flex items-center gap-4">
-      <span className="font-mono-label text-[0.72rem] font-bold tracking-[0.22em] text-accent">STEP {n}</span>
-      <span className="font-display text-[1rem] font-bold uppercase tracking-[0.03em] text-ink">{children}</span>
-      <span className="h-px flex-1 bg-hairline" />
+    <div className="flex w-full">
+      {STEPS.map((s, i) => {
+        const active = step === s.n;
+        const done = step > s.n;
+        const isFirst = i === 0;
+        const isLast = i === STEPS.length - 1;
+        return (
+          <div
+            key={s.n}
+            className="relative flex flex-1 items-center justify-center px-4 py-4 text-center min-[640px]:px-6"
+            style={{
+              clipPath: isFirst
+                ? "polygon(0 0, calc(100% - 1rem) 0, 100% 50%, calc(100% - 1rem) 100%, 0 100%)"
+                : isLast
+                  ? "polygon(0 0, 100% 0, 100% 100%, 0 100%, 1rem 50%)"
+                  : "polygon(0 0, calc(100% - 1rem) 0, 100% 50%, calc(100% - 1rem) 100%, 0 100%, 1rem 50%)",
+              marginLeft: isFirst ? 0 : "-1rem",
+              zIndex: STEPS.length - i,
+              background: active ? "var(--color-accent)" : done ? "#33363c" : "#1c1e22",
+            }}
+          >
+            <span className="font-mono-label text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-white min-[640px]:text-[0.72rem]">
+              <span className="hidden min-[560px]:inline">{s.n}. </span>
+              {s.label}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function CounterField({ label, value, onChange, min = 0 }) {
+  return (
+    <div className="flex items-center justify-between border border-white/15 px-4 py-3">
+      <span className="font-mono-label text-[0.7rem] uppercase tracking-[0.1em] text-white/70">{label}</span>
+      <div className="flex items-center gap-4">
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(min, value - 1))}
+          aria-label={`Decrease ${label}`}
+          className="flex h-7 w-7 items-center justify-center border border-white/25 bg-transparent text-white transition-colors duration-200 hover:bg-white/10"
+        >
+          −
+        </button>
+        <span className="w-4 text-center text-[0.9rem] text-white">{value}</span>
+        <button
+          type="button"
+          onClick={() => onChange(value + 1)}
+          aria-label={`Increase ${label}`}
+          className="flex h-7 w-7 items-center justify-center border border-white/25 bg-transparent text-white transition-colors duration-200 hover:bg-white/10"
+        >
+          +
+        </button>
+      </div>
     </div>
   );
 }
@@ -26,36 +85,33 @@ function nightsBetween(checkIn, checkOut) {
   return diff > 0 ? diff : 0;
 }
 
-const todayStr = new Date().toISOString().slice(0, 10);
-
 export default function Reservation({ initialCheckIn = "", initialCheckOut = "", initialRoomType = "" }) {
-  const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+  const [step, setStep] = useState(1);
+  const [status, setStatus] = useState("idle"); // idle | sending | error
   const [error, setError] = useState("");
   const [roomId, setRoomId] = useState(initialRoomType);
   const [checkIn, setCheckIn] = useState(initialCheckIn);
   const [checkOut, setCheckOut] = useState(initialCheckOut);
-  const [guests, setGuests] = useState(2);
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
 
   const selectedRoom = rooms.find((r) => r.id === roomId) || null;
   const nights = useMemo(() => nightsBetween(checkIn, checkOut), [checkIn, checkOut]);
   const subtotal = selectedRoom && nights > 0 ? nights * Number(selectedRoom.price) : null;
-  const datesInvalid = checkIn && checkOut && nights === 0;
+  const guestsLabel = `${adults} adult${adults > 1 ? "s" : ""}${children > 0 ? `, ${children} child${children > 1 ? "ren" : ""}` : ""}`;
+
+  const canLeaveStep1 = checkIn && checkOut && nights > 0;
+  const canLeaveStep2 = Boolean(roomId);
 
   async function onSubmit(e) {
     e.preventDefault();
-    if (!roomId) {
-      setStatus("error");
-      setError("Please choose a room.");
-      return;
-    }
-    if (datesInvalid) {
-      setStatus("error");
-      setError("Check-out must be after check-in.");
-      return;
-    }
 
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
+    data.roomType = roomId;
+    data.checkIn = checkIn;
+    data.checkOut = checkOut;
+    data.guests = guestsLabel;
     data.nights = String(nights);
     if (subtotal != null) data.estimatedTotal = String(subtotal);
 
@@ -69,15 +125,11 @@ export default function Reservation({ initialCheckIn = "", initialCheckOut = "",
         body: JSON.stringify(data),
       });
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || "Something went wrong. Please try again.");
+        const resBody = await res.json().catch(() => ({}));
+        throw new Error(resBody.error || "Something went wrong. Please try again.");
       }
-      setStatus("sent");
-      form.reset();
-      setRoomId("");
-      setCheckIn("");
-      setCheckOut("");
-      setGuests(2);
+      setStatus("idle");
+      setStep(4);
     } catch (err) {
       setStatus("error");
       setError(err.message);
@@ -88,7 +140,7 @@ export default function Reservation({ initialCheckIn = "", initialCheckOut = "",
     <>
       {/* Arrival banner — same photographic language as the hero, so booking
           feels like a continuation of the site rather than a bolted-on form. */}
-      <section className="relative isolate flex min-h-[52svh] items-center justify-center overflow-hidden text-center min-[880px]:min-h-[58svh]">
+      <section className="relative isolate flex min-h-[38svh] items-center justify-center overflow-hidden text-center min-[880px]:min-h-[42svh]">
         <Image
           src="/images/pool-waterfall.jpg"
           alt="Kings Towers Hotel"
@@ -112,148 +164,157 @@ export default function Reservation({ initialCheckIn = "", initialCheckOut = "",
             Reserve Your Stay
           </h1>
           <p className="mx-auto mt-4 max-w-[46ch] text-[1rem] leading-[1.7] text-white/85">
-            Choose a room and your dates — our team confirms availability and final pricing by phone or email.
+            Choose your dates and room — our team confirms availability and final pricing by phone or email.
             Nothing is charged here.
           </p>
         </div>
       </section>
 
-      <section className="bg-white px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(4rem,10vh,7rem)]">
-        {status === "sent" ? (
-          <div className="mx-auto max-w-[640px] border border-hairline bg-cream p-12 text-center">
-            <span className="font-mono-label text-[0.72rem] uppercase tracking-[0.22em] text-muted">Confirmed</span>
-            <p className="mt-3 font-serif-display text-[1.4rem] font-medium text-ink">
-              Thank you — we&#39;ve received your request.
-            </p>
-            <p className="mt-3 text-[0.92rem] text-body">We&#39;ll be in touch shortly to confirm your stay.</p>
-          </div>
-        ) : (
-          <form onSubmit={onSubmit} className="mx-auto max-w-[1180px]">
-            <StepLabel n="01">Choose a Room</StepLabel>
-            <input type="hidden" name="roomType" value={roomId} />
-            <div className="grid grid-cols-1 gap-6 min-[561px]:grid-cols-2 min-[1024px]:grid-cols-4">
-              {rooms.map((room) => {
-                const selected = room.id === roomId;
-                return (
-                  <button
-                    type="button"
-                    key={room.id}
-                    onClick={() => setRoomId(room.id)}
-                    aria-pressed={selected}
-                    className="group flex flex-col border-0 bg-transparent p-0 text-left transition-transform duration-300 hover:-translate-y-1"
-                  >
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      {room.img ? (
-                        <Image
-                          src={room.img}
-                          alt={room.alt}
-                          fill
-                          sizes="(max-width: 561px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-[#ded9d0] text-[0.78rem] text-body">
-                          Photo coming soon
+      <StepBar step={step} />
+
+      <form onSubmit={onSubmit}>
+        {step === 1 && (
+          <section className="bg-near-black px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(3rem,8vh,5rem)]">
+            <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-8 min-[900px]:grid-cols-[1fr_18rem]">
+              <BookingCalendar
+                checkIn={checkIn}
+                checkOut={checkOut}
+                onChange={({ checkIn: ci, checkOut: co }) => {
+                  setCheckIn(ci);
+                  setCheckOut(co);
+                }}
+              />
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3 bg-[#1c1e22] p-5">
+                  <span className="font-mono-label text-[0.68rem] uppercase tracking-[0.22em] text-white/50">
+                    Guests
+                  </span>
+                  <CounterField label="Adults" value={adults} onChange={setAdults} min={1} />
+                  <CounterField label="Children" value={children} onChange={setChildren} min={0} />
+                </div>
+                <button
+                  type="button"
+                  disabled={!canLeaveStep1}
+                  onClick={() => setStep(2)}
+                  className={`${ctaBase} w-full px-4 py-4 text-[0.9rem] tracking-[0.02em] disabled:cursor-not-allowed disabled:opacity-40`}
+                >
+                  Continue
+                  <CtaArrow />
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {step === 2 && (
+          <section className="bg-white px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(3rem,8vh,5rem)]">
+            <div className="mx-auto max-w-[1180px]">
+              <div className="grid grid-cols-1 gap-6 min-[561px]:grid-cols-2 min-[1024px]:grid-cols-4">
+                {rooms.map((room) => {
+                  const selected = room.id === roomId;
+                  return (
+                    <button
+                      type="button"
+                      key={room.id}
+                      onClick={() => setRoomId(room.id)}
+                      aria-pressed={selected}
+                      className="group flex flex-col border-0 bg-transparent p-0 text-left transition-transform duration-300 hover:-translate-y-1"
+                    >
+                      <div className="relative aspect-[4/3] overflow-hidden">
+                        {room.img ? (
+                          <Image
+                            src={room.img}
+                            alt={room.alt}
+                            fill
+                            sizes="(max-width: 561px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                            className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-[#ded9d0] text-[0.78rem] text-body">
+                            Photo coming soon
+                          </div>
+                        )}
+                      </div>
+                      <div
+                        className="h-[3px] w-full transition-colors duration-300"
+                        style={{ background: selected ? "var(--color-accent)" : "var(--color-hairline)" }}
+                      />
+                      <div className="pt-3">
+                        <div className="flex items-baseline justify-between gap-2">
+                          <span className="font-display text-[0.95rem] font-bold text-ink">{room.title}</span>
+                          <span
+                            className="whitespace-nowrap font-display text-[0.9rem] font-bold transition-colors duration-300"
+                            style={{ color: selected ? "var(--color-accent)" : "var(--color-ink)" }}
+                          >
+                            GHS {room.price}
+                          </span>
                         </div>
-                      )}
-                    </div>
-                    <div
-                      className="h-[3px] w-full transition-colors duration-300"
-                      style={{ background: selected ? "var(--color-accent)" : "var(--color-hairline)" }}
-                    />
-                    <div className="pt-3">
-                      <div className="flex items-baseline justify-between gap-2">
-                        <span className="font-display text-[0.95rem] font-bold text-ink">{room.title}</span>
-                        <span
-                          className="whitespace-nowrap font-display text-[0.9rem] font-bold transition-colors duration-300"
-                          style={{ color: selected ? "var(--color-accent)" : "var(--color-ink)" }}
-                        >
-                          GHS {room.price}
+                        <span className="font-mono-label text-[0.64rem] uppercase tracking-[0.14em] text-muted">
+                          Per Night
                         </span>
                       </div>
-                      <span className="font-mono-label text-[0.64rem] uppercase tracking-[0.14em] text-muted">
-                        Per Night
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="mt-12 flex items-center justify-between gap-4">
+                <button
+                  type="button"
+                  onClick={() => setStep(1)}
+                  className="font-mono-label text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-muted transition-colors duration-200 hover:text-accent"
+                >
+                  ← Back
+                </button>
+                <button
+                  type="button"
+                  disabled={!canLeaveStep2}
+                  onClick={() => setStep(3)}
+                  className={`${ctaBase} px-8 py-4 text-[0.9rem] tracking-[0.02em] disabled:cursor-not-allowed disabled:opacity-40`}
+                >
+                  Continue
+                  <CtaArrow />
+                </button>
+              </div>
             </div>
+          </section>
+        )}
 
-            <div className="mt-16 grid grid-cols-1 gap-14 min-[900px]:grid-cols-[1fr_22rem]">
+        {step === 3 && (
+          <section className="bg-white px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(3rem,8vh,5rem)]">
+            <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-14 min-[900px]:grid-cols-[1fr_22rem]">
               <div>
-                <StepLabel n="02">Your Stay</StepLabel>
-                <div className="grid grid-cols-1 gap-5 min-[561px]:grid-cols-3">
-                  <label>
-                    <span className={labelClass}>Check-in</span>
-                    <input
-                      required
-                      type="date"
-                      name="checkIn"
-                      min={todayStr}
-                      value={checkIn}
-                      onChange={(e) => setCheckIn(e.target.value)}
-                      className={inputClass}
-                    />
+                <div className="grid grid-cols-1 gap-5 min-[561px]:grid-cols-2">
+                  <label className="min-[561px]:col-span-2">
+                    <span className={labelClass}>Full name</span>
+                    <input required name="name" placeholder="Full name" className={inputClass} />
                   </label>
                   <label>
-                    <span className={labelClass}>Check-out</span>
-                    <input
-                      required
-                      type="date"
-                      name="checkOut"
-                      min={checkIn || todayStr}
-                      value={checkOut}
-                      onChange={(e) => setCheckOut(e.target.value)}
-                      className={inputClass}
-                    />
+                    <span className={labelClass}>Email</span>
+                    <input required type="email" name="email" placeholder="Email" className={inputClass} />
                   </label>
                   <label>
-                    <span className={labelClass}>Guests</span>
-                    <select
-                      name="guests"
-                      value={guests}
-                      onChange={(e) => setGuests(Number(e.target.value))}
-                      className={inputClass}
-                    >
-                      {[1, 2, 3, 4].map((n) => (
-                        <option key={n} value={n}>
-                          {n} guest{n > 1 ? "s" : ""}
-                        </option>
-                      ))}
-                    </select>
+                    <span className={labelClass}>Phone</span>
+                    <input required type="tel" name="phone" placeholder="Phone" className={inputClass} />
+                  </label>
+                  <label className="min-[561px]:col-span-2">
+                    <span className={labelClass}>Message (optional)</span>
+                    <textarea
+                      name="message"
+                      placeholder="Anything else we should know?"
+                      rows={3}
+                      className={`${inputClass} resize-y`}
+                    />
                   </label>
                 </div>
-                {datesInvalid && (
-                  <p className="mt-3 text-[0.82rem] text-red-600">Check-out must be after check-in.</p>
-                )}
 
-                <div className="mt-14">
-                  <StepLabel n="03">Your Details</StepLabel>
-                  <div className="grid grid-cols-1 gap-5 min-[561px]:grid-cols-2">
-                    <label className="min-[561px]:col-span-2">
-                      <span className={labelClass}>Full name</span>
-                      <input required name="name" placeholder="Full name" className={inputClass} />
-                    </label>
-                    <label>
-                      <span className={labelClass}>Email</span>
-                      <input required type="email" name="email" placeholder="Email" className={inputClass} />
-                    </label>
-                    <label>
-                      <span className={labelClass}>Phone</span>
-                      <input required type="tel" name="phone" placeholder="Phone" className={inputClass} />
-                    </label>
-                    <label className="min-[561px]:col-span-2">
-                      <span className={labelClass}>Message (optional)</span>
-                      <textarea
-                        name="message"
-                        placeholder="Anything else we should know?"
-                        rows={3}
-                        className={`${inputClass} resize-y`}
-                      />
-                    </label>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setStep(2)}
+                  className="mt-8 font-mono-label text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-muted transition-colors duration-200 hover:text-accent"
+                >
+                  ← Back
+                </button>
               </div>
 
               {/* Sticky checkout summary — price and CTA live together, the
@@ -265,7 +326,7 @@ export default function Reservation({ initialCheckIn = "", initialCheckOut = "",
                   Summary
                 </span>
 
-                {selectedRoom ? (
+                {selectedRoom && (
                   <>
                     <div className="relative mt-5 aspect-[4/3] overflow-hidden">
                       {selectedRoom.img ? (
@@ -285,10 +346,11 @@ export default function Reservation({ initialCheckIn = "", initialCheckOut = "",
                     <h3 className="mt-5 font-display text-[1.05rem] font-bold text-white">{selectedRoom.title}</h3>
 
                     <div className="mt-5 flex justify-between border-t border-white/15 pt-5 text-[0.85rem] text-white/70">
-                      <span>{nights > 0 ? `${nights} night${nights > 1 ? "s" : ""}` : "Select dates"}</span>
-                      <span>
-                        {guests} guest{guests > 1 ? "s" : ""}
-                      </span>
+                      <span>{checkIn} → {checkOut}</span>
+                    </div>
+                    <div className="mt-2 flex justify-between text-[0.85rem] text-white/70">
+                      <span>{nights} night{nights > 1 ? "s" : ""}</span>
+                      <span>{guestsLabel}</span>
                     </div>
 
                     <div className="mt-5 flex items-baseline justify-between border-t border-white/15 pt-5">
@@ -301,8 +363,6 @@ export default function Reservation({ initialCheckIn = "", initialCheckOut = "",
                       Estimate only — final pricing and availability confirmed by our team.
                     </p>
                   </>
-                ) : (
-                  <p className="mt-5 text-[0.88rem] text-white/70">Choose a room to see pricing.</p>
                 )}
 
                 <button
@@ -316,9 +376,21 @@ export default function Reservation({ initialCheckIn = "", initialCheckOut = "",
                 {status === "error" && <p className="mt-3 text-[0.82rem] text-red-400">{error}</p>}
               </div>
             </div>
-          </form>
+          </section>
         )}
-      </section>
+
+        {step === 4 && (
+          <section className="bg-white px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(4rem,10vh,7rem)]">
+            <div className="mx-auto max-w-[640px] border border-hairline bg-cream p-12 text-center">
+              <span className="font-mono-label text-[0.72rem] uppercase tracking-[0.22em] text-muted">Confirmed</span>
+              <p className="mt-3 font-serif-display text-[1.4rem] font-medium text-ink">
+                Thank you — we&#39;ve received your request.
+              </p>
+              <p className="mt-3 text-[0.92rem] text-body">We&#39;ll be in touch shortly to confirm your stay.</p>
+            </div>
+          </section>
+        )}
+      </form>
     </>
   );
 }
