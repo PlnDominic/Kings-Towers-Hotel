@@ -3,6 +3,16 @@
 export const ctaBase =
   "group relative inline-flex items-center justify-center gap-2 border-0 bg-accent font-semibold text-white no-underline transition-all duration-200 ease-out hover:bg-accent-hover hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-10px_rgba(209,96,31,0.65)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:translate-y-0 active:shadow-none disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:bg-accent disabled:hover:shadow-none";
 
+// Rounded pill buttons — used only by the header + hero, matching a
+// specific reference design's shape. The rest of the site is deliberately
+// square-cornered; this is a scoped exception on shape only, not color —
+// still the site's own orange accent, no separate gold palette.
+export const pillBase =
+  "group relative inline-flex items-center justify-center gap-2 rounded-full border-0 bg-accent font-semibold text-white no-underline transition-all duration-200 ease-out hover:bg-accent-hover hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-10px_rgba(209,96,31,0.65)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:translate-y-0 active:shadow-none disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:bg-accent disabled:hover:shadow-none";
+
+export const pillOutlineBase =
+  "group relative inline-flex items-center justify-center gap-2 rounded-full border border-white bg-transparent font-semibold text-white no-underline transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-white hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:translate-y-0";
+
 export function CtaArrow() {
   return (
     <span aria-hidden="true" className="inline-block transition-transform duration-200 ease-out group-hover:translate-x-1">

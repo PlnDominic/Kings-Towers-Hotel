@@ -11,6 +11,11 @@ function paramString(value) {
   return typeof value === "string" ? value : "";
 }
 
+function paramInt(value, fallback) {
+  const n = parseInt(value, 10);
+  return Number.isFinite(n) && n >= 0 ? n : fallback;
+}
+
 export default async function ReservationPage({ searchParams }) {
   const params = await searchParams;
 
@@ -22,6 +27,9 @@ export default async function ReservationPage({ searchParams }) {
           initialCheckIn={paramString(params.checkIn)}
           initialCheckOut={paramString(params.checkOut)}
           initialRoomType={paramString(params.roomType)}
+          initialAdults={paramInt(params.adults, 2)}
+          initialChildren={paramInt(params.children, 0)}
+          initialPromo={paramString(params.promo)}
         />
       </main>
       <Footer />

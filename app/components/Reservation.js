@@ -85,15 +85,22 @@ function nightsBetween(checkIn, checkOut) {
   return diff > 0 ? diff : 0;
 }
 
-export default function Reservation({ initialCheckIn = "", initialCheckOut = "", initialRoomType = "" }) {
+export default function Reservation({
+  initialCheckIn = "",
+  initialCheckOut = "",
+  initialRoomType = "",
+  initialAdults = 2,
+  initialChildren = 0,
+  initialPromo = "",
+}) {
   const [step, setStep] = useState(1);
   const [status, setStatus] = useState("idle"); // idle | sending | error
   const [error, setError] = useState("");
   const [roomId, setRoomId] = useState(initialRoomType);
   const [checkIn, setCheckIn] = useState(initialCheckIn);
   const [checkOut, setCheckOut] = useState(initialCheckOut);
-  const [adults, setAdults] = useState(2);
-  const [children, setChildren] = useState(0);
+  const [adults, setAdults] = useState(initialAdults);
+  const [children, setChildren] = useState(initialChildren);
 
   const selectedRoom = rooms.find((r) => r.id === roomId) || null;
   const nights = useMemo(() => nightsBetween(checkIn, checkOut), [checkIn, checkOut]);
@@ -114,6 +121,7 @@ export default function Reservation({ initialCheckIn = "", initialCheckOut = "",
     data.guests = guestsLabel;
     data.nights = String(nights);
     if (subtotal != null) data.estimatedTotal = String(subtotal);
+    if (initialPromo) data.promo = initialPromo;
 
     setStatus("sending");
     setError("");
@@ -362,6 +370,11 @@ export default function Reservation({ initialCheckIn = "", initialCheckOut = "",
                     <p className="mt-2 text-[0.72rem] leading-[1.5] text-white/45">
                       Estimate only — final pricing and availability confirmed by our team.
                     </p>
+                    {initialPromo && (
+                      <p className="mt-3 border-t border-white/15 pt-3 text-[0.78rem] text-white/70">
+                        Promo code: <span className="text-white">{initialPromo}</span>
+                      </p>
+                    )}
                   </>
                 )}
 

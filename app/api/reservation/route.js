@@ -25,7 +25,7 @@ export async function POST(request) {
     return Response.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, email, phone, checkIn, checkOut, roomType, guests, nights, estimatedTotal, message } = body || {};
+  const { name, email, phone, checkIn, checkOut, roomType, guests, nights, estimatedTotal, message, promo } = body || {};
 
   if (!name || !email || !phone || !checkIn || !checkOut || !roomType) {
     return Response.json({ error: "Please fill in all required fields." }, { status: 400 });
@@ -51,6 +51,7 @@ export async function POST(request) {
     guests ? `Guests: ${guests}` : null,
     `Room type: ${roomLabel}`,
     estimatedTotal ? `Estimated total: GHS ${estimatedTotal}` : null,
+    promo ? `Promo code: ${promo}` : null,
     message ? `Message: ${message}` : null,
   ]
     .filter(Boolean)
@@ -68,6 +69,7 @@ export async function POST(request) {
       ${guests ? `<tr><td><strong>Guests</strong></td><td>${escapeHtml(guests)}</td></tr>` : ""}
       <tr><td><strong>Room type</strong></td><td>${escapeHtml(roomLabel)}</td></tr>
       ${estimatedTotal ? `<tr><td><strong>Estimated total</strong></td><td>GHS ${escapeHtml(estimatedTotal)}</td></tr>` : ""}
+      ${promo ? `<tr><td><strong>Promo code</strong></td><td>${escapeHtml(promo)}</td></tr>` : ""}
       ${message ? `<tr><td><strong>Message</strong></td><td>${escapeHtml(message)}</td></tr>` : ""}
     </table>
   `;
