@@ -33,8 +33,7 @@ export default function Testimonials() {
 
         <p className="mx-auto max-w-[42ch] text-center text-[1rem] leading-[1.7] text-body">{t.quote}</p>
 
-        <div className="mx-auto mt-8 h-14 w-14 bg-cream" />
-        <p className="mt-4 text-center text-[0.92rem] text-ink">
+        <p className="mt-8 text-center text-[0.92rem] text-ink">
           {t.name} <span className="text-muted">– {t.detail}</span>
         </p>
 
