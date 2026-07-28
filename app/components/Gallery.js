@@ -55,7 +55,7 @@ export default function Gallery() {
             <button
               type="button"
               onClick={() => setLightboxIndex(0)}
-              className="inline-flex items-center gap-2 rounded-xl border-0 bg-accent px-6 py-3 text-[0.9rem] font-semibold text-white transition-colors duration-200 hover:bg-accent-hover"
+              className="inline-flex items-center gap-2 border-0 bg-accent px-6 py-3 text-[0.9rem] font-semibold text-white transition-colors duration-200 hover:bg-accent-hover"
             >
               Enter Photo Gallery
               <ChevronRight />

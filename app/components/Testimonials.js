@@ -33,7 +33,7 @@ export default function Testimonials() {
 
         <p className="mx-auto max-w-[42ch] text-center text-[1rem] leading-[1.7] text-body">{t.quote}</p>
 
-        <div className="mx-auto mt-8 h-14 w-14 rounded-full bg-cream" />
+        <div className="mx-auto mt-8 h-14 w-14 bg-cream" />
         <p className="mt-4 text-center text-[0.92rem] text-ink">
           {t.name} <span className="text-muted">– {t.detail}</span>
         </p>
@@ -45,7 +45,7 @@ export default function Testimonials() {
               type="button"
               aria-label={`Show testimonial ${i + 1}`}
               onClick={() => setIndex(i)}
-              className="h-2 w-2 rounded-full border-0 p-0 transition-colors duration-200"
+              className="h-2 w-2 border-0 p-0 transition-colors duration-200"
               style={{ background: i === index ? "var(--color-accent)" : "var(--color-hairline)" }}
             />
           ))}

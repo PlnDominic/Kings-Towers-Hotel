@@ -52,13 +52,13 @@ export default function Footer() {
             placeholder="EMAIL"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="flex-1 rounded-full border border-white/15 bg-[#1c1c1c] px-[1.4rem] py-[0.9rem] text-[0.85rem] tracking-[0.03em] text-white placeholder:text-white/50"
+            className="flex-1 border border-white/15 bg-[#1c1c1c] px-[1.4rem] py-[0.9rem] text-[0.85rem] tracking-[0.03em] text-white placeholder:text-white/50"
           />
           <button
             type="submit"
             disabled={status === "sending"}
             aria-label="Subscribe"
-            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-0 bg-white text-[1rem] disabled:opacity-60"
+            className="flex h-12 w-12 shrink-0 items-center justify-center border-0 bg-white text-[1rem] disabled:opacity-60"
           >
             →
           </button>
@@ -102,9 +102,6 @@ export default function Footer() {
           </Link>
           <Link href="/#room-types" className="font-semibold text-white underline">
             ROOMS
-          </Link>
-          <Link href="/#leisure" className="font-semibold text-white underline">
-            LEISURE
           </Link>
           <Link href="/#gallery" className="font-semibold text-white underline">
             GALLERY

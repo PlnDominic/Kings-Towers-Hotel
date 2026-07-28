@@ -1,6 +1,4 @@
 export const heroImages = [
-  { src: "/images/pool-grounds.jpg", alt: "Kings Towers Hotel swimming pool and grounds" },
-  { src: "/images/poolside-garden.jpg", alt: "Poolside garden with African relief mural" },
   { src: "/images/pool-waterfall.jpg", alt: "Pool with carved African relief mural and stone waterfall" },
   { src: "/images/poolbar-terrace.jpg", alt: "Pool Bar terrace with seating" },
   { src: "/images/hotel-exterior.jpg", alt: "Kings Towers Hotel exterior" },

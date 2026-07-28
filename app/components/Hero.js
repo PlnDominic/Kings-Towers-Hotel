@@ -11,7 +11,7 @@ import { ctaBase, CtaArrow } from "./ui";
 // edge along the top (where light would catch a glass rim) fading to
 // almost nothing at the bottom, plus a soft outer shadow for lift.
 const glassClass =
-  "mx-auto flex w-full max-w-md flex-col self-center overflow-hidden rounded-2xl border border-white/25 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_-1px_1px_rgba(255,255,255,0.05)] backdrop-blur-xl backdrop-saturate-150 min-[700px]:w-auto min-[700px]:max-w-none min-[700px]:flex-row min-[700px]:items-stretch";
+  "mx-auto flex w-full max-w-md flex-col self-center overflow-hidden border border-white/25 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_-1px_1px_rgba(255,255,255,0.05)] backdrop-blur-xl backdrop-saturate-150 min-[700px]:w-auto min-[700px]:max-w-none min-[700px]:flex-row min-[700px]:items-stretch";
 
 const fieldClass =
   "min-w-0 flex-1 border-b border-white/15 bg-transparent px-4 py-2.5 text-[0.82rem] text-white [color-scheme:dark] placeholder:text-white/60 focus:bg-white/10 focus:outline-none min-[700px]:border-b-0 min-[700px]:border-r";
@@ -98,7 +98,7 @@ export default function Hero() {
             key={img.src}
             onClick={() => setIndex(i)}
             aria-label={`Show slide ${i + 1}`}
-            className="h-2 cursor-pointer rounded-full border-0 p-0 transition-all duration-300"
+            className="h-2 cursor-pointer border-0 p-0 transition-all duration-300"
             style={{
               width: i === index ? "22px" : "8px",
               background: i === index ? "#fff" : "rgba(255,255,255,0.45)",
@@ -130,9 +130,12 @@ export default function Hero() {
           Book Now
           <CtaArrow />
         </Link>
-        <div className="mt-4">
-          <BookingContainer />
-        </div>
+      </div>
+
+      {/* Docked low, just above the slide dots, instead of inside the
+          vertically-centered text stack. */}
+      <div className="absolute inset-x-0 bottom-[calc(clamp(1.5rem,4vh,3rem)+2.75rem)] z-10 px-[clamp(1.25rem,5vw,5.5rem)]">
+        <BookingContainer />
       </div>
     </section>
   );
