@@ -14,8 +14,8 @@ export default function Home() {
       <Header transparentAtTop />
       <Hero />
       <About />
-      <Amenities />
       <Rooms />
+      <Amenities />
       <PoolBar />
       <Gallery />
       <LocationMap />
