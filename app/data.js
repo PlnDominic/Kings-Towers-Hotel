@@ -83,12 +83,25 @@ export const galleryImages = [
   { src: "/images/gallery-twin.jpg", alt: "Twin Room" },
 ];
 
-// Placeholder copy only — no real guest reviews were supplied, and
-// inventing quotes attributed to made-up guests would be a fabricated
-// testimonial. Replace each entry with a real review before launch.
+// Real reviews from the hotel's Google Business Profile, trimmed to a
+// short pull-quote each — not fabricated or invented.
 export const testimonials = [
-  { quote: "Add a real guest testimonial here.", name: "Guest name", detail: "Room type" },
-  { quote: "Add a second guest testimonial here.", name: "Guest name", detail: "Room type" },
-  { quote: "Add a third guest testimonial here.", name: "Guest name", detail: "Room type" },
+  {
+    quote: "I enjoyed my stay. Clean rooms, reasonable prices, swimming pool, morning breakfast.",
+    name: "Suzie Q.",
+    detail: "4/5 on Google · Holiday, Family",
+  },
+  {
+    quote:
+      "Very pleasant place to lodge. The customer service was very great — everyone was very friendly. A nice and cozy place to stay, and I would recommend it.",
+    name: "Bernice Yram Danu, PhD.",
+    detail: "4/5 on Google · Business, Solo",
+  },
+  {
+    quote:
+      "Lovely and near bedrooms. I slept like a baby at night. Wonderful continental breakfast served too. I can't wait to visit there again when I'm in Kumasi.",
+    name: "Abena Mimi",
+    detail: "5/5 on Google · Holiday, Friends",
+  },
 ];
 

@@ -22,12 +22,12 @@ export default function About() {
           </a>
         </div>
 
-        <div className="relative aspect-[6/5] overflow-hidden">
+        <div className="relative mx-auto aspect-[6/5] w-full max-w-[420px] overflow-hidden">
           <Image
             src="/images/poolside-garden.jpg"
             alt="Poolside garden with African relief mural"
             fill
-            sizes="(max-width: 880px) 100vw, 50vw"
+            sizes="(max-width: 880px) 100vw, 420px"
             className="object-cover"
           />
         </div>
