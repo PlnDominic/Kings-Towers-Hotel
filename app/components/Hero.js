@@ -299,8 +299,8 @@ export default function Hero() {
             Spoil yourself in <span className="italic text-accent-soft">comfort beyond imagination.</span>
           </h1>
           <p className="max-w-[38ch] text-[1rem] leading-[1.7] text-white/85 [text-shadow:0_1px_18px_rgba(0,0,0,0.35)]">
-            Discover unmatched comfort, exceptional service, and unforgettable moments at Kings Towers Hotel — a
-            quiet, serene setting in Ahensan Estates, Kumasi, just two minutes from KNUST west gate.
+            Enjoy that honest, sincere hospitality service and courtesies designed for nobility, the business
+            traveller, the relaxing leisure seeker and that quiet family evening out.
           </p>
           <Link href="/#room-types" className={`${pillOutlineBase} mt-2 w-fit whitespace-nowrap px-7 py-3.5 text-[0.9rem]`}>
             Explore Rooms
