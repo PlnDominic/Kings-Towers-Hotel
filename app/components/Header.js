@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,41 +17,21 @@ const navLinks = [
   { href: "/#gallery", label: "Gallery" },
 ];
 
-function CrownMark({ className }) {
+// The logo art has its own white background, so it needs a matching white
+// chip behind it to read cleanly over the transparent/dark hero photo state
+// — without one it would show as a hard-edged rectangle floating on the image.
+function Wordmark({ compact }) {
   return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M4 9.5 6.3 11 9 6l3 4 3-4 2.7 5 2.3-1.5-1.4 8.5H5.4L4 9.5Z" />
-      <circle cx="4" cy="8.3" r="0.9" fill="currentColor" stroke="none" />
-      <circle cx="12" cy="5" r="0.9" fill="currentColor" stroke="none" />
-      <circle cx="20" cy="8.3" r="0.9" fill="currentColor" stroke="none" />
-      <path d="M5.6 17.5h12.8" />
-    </svg>
-  );
-}
-
-function Wordmark({ compact, textColor }) {
-  return (
-    <Link href="/" style={{ color: "inherit" }} className="flex items-center gap-2.5 no-underline">
-      <CrownMark className={`shrink-0 text-accent ${compact ? "h-5 w-5" : "h-6 w-6"}`} />
-      <span className="leading-none">
-        <span
-          className="block whitespace-nowrap font-serif-display text-[1.05rem] font-semibold tracking-[0.02em]"
-          style={{ color: textColor }}
-        >
-          Kings Towers
-        </span>
-        <span className="mt-0.5 block whitespace-nowrap text-right font-mono-label text-[0.55rem] font-normal uppercase tracking-[0.42em] text-accent">
-          Hotel
-        </span>
+    <Link href="/" className="flex items-center no-underline">
+      <span className="flex items-center rounded-md bg-white px-2 py-1 shadow-sm">
+        <Image
+          src="/images/Kings Towers Logo.jpeg"
+          alt="Kings Towers Hotel Limited"
+          width={145}
+          height={50}
+          priority
+          className={`w-auto ${compact ? "h-8" : "h-9"}`}
+        />
       </span>
     </Link>
   );
@@ -122,7 +103,7 @@ export default function Header({ transparentAtTop = false }) {
           left, primary nav centered, actions right, floating directly on
           the hero photo until the page scrolls. */}
       <div className="kt-nav-in mx-auto grid max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-6 px-5 py-4 min-[880px]:px-8">
-        <Wordmark textColor={textColor} />
+        <Wordmark />
 
         <nav className="hidden items-center justify-center gap-8 min-[880px]:flex">
           {navLinks.map((l) => (
@@ -176,7 +157,7 @@ export default function Header({ transparentAtTop = false }) {
         }`}
       >
         <div className="flex items-center justify-between border-b border-hairline px-6 py-5 text-ink">
-          <Wordmark compact textColor="var(--color-ink)" />
+          <Wordmark compact />
           <button
             type="button"
             aria-label="Close menu"
