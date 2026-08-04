@@ -29,6 +29,10 @@ export const metadata = {
   title: "Kings Towers Hotel & Conference Centre | Ahensan Estate, Kumasi",
   description:
     "A serene, scenic retreat in Ahensan Estate, Kumasi. Guest rooms, poolside leisure, and dining at Kings Towers Hotel & Conference Centre.",
+  icons: {
+    icon: "/images/Kings Towers Logo.jpeg",
+    apple: "/images/Kings Towers Logo.jpeg",
+  },
 };
 
 export default function RootLayout({ children }) {
