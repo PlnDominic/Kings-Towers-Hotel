@@ -88,12 +88,18 @@ export default function Footer() {
           <p className="m-0 text-[0.88rem] leading-[1.7] text-white/85">
             Kings Towers Hotel &amp; Conference Centre
             <br />
-            Ahensan Estate, Kumasi, Ghana
+            Plot 3–4 Block D, Old Ahensan, Ahensan Estates, Bishop F. Sarpong Close
+            <br />
+            Kumasi, Ghana · P.O. Box 5722
           </p>
           <p className="mt-4 text-[0.88rem] leading-[1.7] text-white/85">
-            kingsthl@yahoo.com
+            kingstowershotel@gmail.com
             <br />
-            T: 020 888 8123
+            info@kingstowershotelltd.com
+            <br />
+            T: 020 88 88 123 · 026 57 37 917
+            <br />
+            T: 020 88 88 067 · 024 914 1074
           </p>
         </div>
         <div className="flex flex-col gap-[0.7rem] text-[0.82rem] tracking-[0.02em]">

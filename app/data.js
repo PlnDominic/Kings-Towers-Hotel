@@ -7,40 +7,40 @@ export const heroImages = [
 
 export const rooms = [
   {
-    id: "queen",
-    title: "Queen Room",
-    price: "525",
-    img: "/images/room-queen.jpg",
-    alt: "Queen Room with wood ceiling and orange curtains",
-    desc: "A spacious room with a queen bed, warm wood flooring and a dedicated work desk.",
-    features: "Queen bed · Air conditioning · Ensuite bath · DSTV",
-  },
-  {
     id: "standard",
-    title: "Standard Room",
-    price: "425",
+    title: "Standard Guestroom",
+    price: "550",
     img: "/images/room-standard.jpg",
     alt: "Standard Room with double bed",
     desc: "A comfortable double room fitted with air conditioning, TV and a personal refrigerator.",
-    features: "Double bed · Air conditioning · Ensuite bath · DSTV",
+    features: "Double bed · Air conditioning · Internet · DSTV & local channels · Personal refrigerator",
   },
   {
-    id: "twin",
-    title: "Twin Room",
-    price: "745",
-    img: "/images/room-twin.jpg",
-    alt: "Twin Room with two single beds",
-    desc: "Two single beds in one air-conditioned room, ideal for colleagues or friends traveling together.",
-    features: "Twin beds · Air conditioning · Ensuite bath · DSTV",
+    id: "queen",
+    title: "Queen Bed Guestroom",
+    price: "650",
+    img: "/images/room-queen.jpg",
+    alt: "Queen Room with wood ceiling and orange curtains",
+    desc: "A spacious room with a queen bed, warm wood flooring and a dedicated work desk.",
+    features: "Queen bed · Air conditioning · Internet · DSTV & local channels · Personal refrigerator",
   },
   {
     id: "mini-suite",
-    title: "Mini Suite",
-    price: "695",
+    title: "Mini-Suite Guestroom",
+    price: "850",
     img: null,
     alt: "Mini Suite",
     desc: "Our largest guest room, with extra lounge space for longer stays.",
-    features: "Extra lounge area · Air conditioning · Ensuite bath · DSTV",
+    features: "Extra lounge area · Air conditioning · Internet · DSTV & local channels · Personal refrigerator",
+  },
+  {
+    id: "twin",
+    title: "Twin-Bed Guestroom",
+    price: "950",
+    img: "/images/room-twin.jpg",
+    alt: "Twin Room with two single beds",
+    desc: "Two single beds in one air-conditioned room, ideal for colleagues or friends traveling together.",
+    features: "Twin beds · Air conditioning · Internet · DSTV & local channels · Personal refrigerator",
   },
 ];
 
@@ -49,26 +49,26 @@ const icon = (paths) =>
 
 export const amenities = [
   {
-    title: "Twin-Bed Guest Rooms",
-    desc: "Clean, tastily furnished, air-conditioned rooms with personal refrigerators.",
+    title: "Air-Conditioned Guestrooms",
+    desc: "Affordable, tastily furnished and restful rooms with in-room internet, DSTV and local TV channels.",
     icon: icon(
       '<path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6M3 18h18M3 18v2M21 18v2M7 10V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3"/>'
     ),
   },
   {
     title: "Swimming Pool",
-    desc: "Rooftop garden and poolside terrace with tropical fruit cocktails.",
+    desc: "A clean and cute swimming pool to cool off those hot afternoons.",
     icon: icon('<path d="M2 17c1.5 1 3 1 4.5 0S9 16 10.5 17s3 1 4.5 0 3-1 4.5 0 3 1 4.5 0M4 12l7-8 7 8"/>'),
   },
   {
-    title: "DSTV & Local Channels",
-    desc: "In-room DSTV and four local TV channels.",
-    icon: icon('<rect x="3" y="5" width="18" height="13" rx="1"/><path d="M8 21h8M12 18v3"/>'),
+    title: "Dining & Bar",
+    desc: "Meals, drinks and liquor selected from Ghanaian, continental and oriental dishes to surprise your palate.",
+    icon: icon('<path d="M4 3h16l-1.5 9a5 5 0 0 1-5 4h-3a5 5 0 0 1-5-4L4 3zM8 21h8M12 16v5"/>'),
   },
   {
-    title: "4 Bars, 3 Restaurants",
-    desc: "Oriental and rare African dishes, plus a chilled pool bar.",
-    icon: icon('<path d="M4 3h16l-1.5 9a5 5 0 0 1-5 4h-3a5 5 0 0 1-5-4L4 3zM8 21h8M12 16v5"/>'),
+    title: "24/7 Security & Power",
+    desc: "24/7 utilities including electric power, with total property security provided by electric fencing monitored by CCTV.",
+    icon: icon('<path d="M12 3 4 6v6c0 4.4 3.2 8.3 8 9.5 4.8-1.2 8-5.1 8-9.5V6l-8-3Z"/>'),
   },
 ];
 

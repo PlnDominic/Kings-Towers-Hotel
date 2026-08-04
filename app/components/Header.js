@@ -222,7 +222,7 @@ export default function Header({ transparentAtTop = false }) {
             href="tel:+233208888123"
             className="mt-4 block text-center font-mono-label text-[0.78rem] tracking-[0.06em] text-muted no-underline hover:text-accent"
           >
-            Call us · 020 888 8123
+            Call us · 020 88 88 123
           </a>
         </div>
       </div>
