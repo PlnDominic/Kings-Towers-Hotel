@@ -79,7 +79,7 @@ export default function BookingCalendar({ checkIn, checkOut, onChange }) {
                   background: isEdge
                     ? "var(--color-accent)"
                     : inRange
-                      ? "rgba(209,96,31,0.28)"
+                      ? "rgba(226,35,26,0.28)"
                       : isPast
                         ? "transparent"
                         : "rgba(255,255,255,0.06)",
