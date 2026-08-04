@@ -228,7 +228,7 @@ function BookingCard() {
             >
               Call Us
             </a>
-            <a href="mailto:kingsthl@yahoo.com" className={`${pillBase} px-5 py-2.5 text-[0.85rem]`}>
+            <a href="mailto:kingstowershotel@gmail.com" className={`${pillBase} px-5 py-2.5 text-[0.85rem]`}>
               Email Us
             </a>
           </div>
@@ -301,8 +301,8 @@ export default function Hero() {
             <span className="italic text-accent-soft">Feel at Home.</span>
           </h1>
           <p className="max-w-[38ch] text-[1rem] leading-[1.7] text-white/85 [text-shadow:0_1px_18px_rgba(0,0,0,0.35)]">
-            Discover unmatched comfort, exceptional service, and unforgettable moments at Kings Towers Hotel in
-            Ahensan Estate, Kumasi.
+            Discover unmatched comfort, exceptional service, and unforgettable moments at Kings Towers Hotel — a
+            quiet, serene setting in Ahensan Estates, Kumasi, just two minutes from KNUST west gate.
           </p>
           <Link href="/#room-types" className={`${pillOutlineBase} mt-2 w-fit whitespace-nowrap px-7 py-3.5 text-[0.9rem]`}>
             Explore Rooms
