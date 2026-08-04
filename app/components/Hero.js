@@ -295,10 +295,8 @@ export default function Hero() {
           <span className="font-mono-label text-[0.72rem] font-semibold uppercase tracking-[0.3em] text-accent-soft">
             Welcome to Kings Towers Hotel
           </span>
-          <h1 className="m-0 max-w-[16ch] font-serif-display text-[clamp(2.5rem,6vw,4.2rem)] leading-[1.08] text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.4)]">
-            Experience Luxury.
-            <br />
-            <span className="italic text-accent-soft">Feel at Home.</span>
+          <h1 className="m-0 max-w-[20ch] font-serif-display text-[clamp(2.5rem,6vw,4.2rem)] leading-[1.08] text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.4)]">
+            Spoil yourself in <span className="italic text-accent-soft">comfort beyond imagination.</span>
           </h1>
           <p className="max-w-[38ch] text-[1rem] leading-[1.7] text-white/85 [text-shadow:0_1px_18px_rgba(0,0,0,0.35)]">
             Discover unmatched comfort, exceptional service, and unforgettable moments at Kings Towers Hotel — a
