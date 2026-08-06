@@ -49,11 +49,21 @@ const icon = (paths) =>
 
 export const amenities = [
   {
-    title: "Air-Conditioned Guestrooms",
-    desc: "Affordable, tastily furnished and restful rooms with in-room internet, DSTV and local TV channels.",
+    title: "Guestrooms",
+    desc: "A range of affordable tastily furnished and restful airconditioned guestrooms.",
     icon: icon(
       '<path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6M3 18h18M3 18v2M21 18v2M7 10V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3"/>'
     ),
+  },
+  {
+    title: "Internet & DSTV",
+    desc: "In-room internet service, DSTV and local TV Channels.",
+    icon: icon('<rect x="3" y="5" width="18" height="13" rx="1"/><path d="M8 21h8M12 18v3"/>'),
+  },
+  {
+    title: "Dining & Bar",
+    desc: "Enjoy meals, drinks and liquor carefully selected from Ghanaian, continental and oriental dishes to surprise your palate.",
+    icon: icon('<path d="M4 3h16l-1.5 9a5 5 0 0 1-5 4h-3a5 5 0 0 1-5-4L4 3zM8 21h8M12 16v5"/>'),
   },
   {
     title: "Swimming Pool",
@@ -61,14 +71,21 @@ export const amenities = [
     icon: icon('<path d="M2 17c1.5 1 3 1 4.5 0S9 16 10.5 17s3 1 4.5 0 3-1 4.5 0 3 1 4.5 0M4 12l7-8 7 8"/>'),
   },
   {
-    title: "Dining & Bar",
-    desc: "Meals, drinks and liquor selected from Ghanaian, continental and oriental dishes to surprise your palate.",
-    icon: icon('<path d="M4 3h16l-1.5 9a5 5 0 0 1-5 4h-3a5 5 0 0 1-5-4L4 3zM8 21h8M12 16v5"/>'),
+    title: "24/7 Security & Power",
+    desc: "24 / 7 utilities including electric power, total property security provided by electric fencing monitored by CCTV.",
+    icon: icon('<path d="M12 3 4 6v6c0 4.4 3.2 8.3 8 9.5 4.8-1.2 8-5.1 8-9.5V6l-8-3Z"/>'),
   },
   {
-    title: "24/7 Security & Power",
-    desc: "24/7 utilities including electric power, with total property security provided by electric fencing monitored by CCTV.",
-    icon: icon('<path d="M12 3 4 6v6c0 4.4 3.2 8.3 8 9.5 4.8-1.2 8-5.1 8-9.5V6l-8-3Z"/>'),
+    title: "Customer Service",
+    desc: "Very professional customer service team ready to provide for your needs when in residence.",
+    icon: icon(
+      '<path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="2" y="13" width="4" height="6" rx="1"/><rect x="18" y="13" width="4" height="6" rx="1"/><path d="M20 19a4 4 0 0 1-4 4h-2"/>'
+    ),
+  },
+  {
+    title: "Conferencing & Events",
+    desc: "Conferencing with buffet service facilities for social and educational groups as well as for your special birthday and wedding events.",
+    icon: icon('<rect x="3" y="4" width="18" height="14" rx="1"/><path d="M3 9h18M8 21h8M12 18v3"/>'),
   },
 ];
 
