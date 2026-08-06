@@ -53,6 +53,26 @@ body {
   animation: kt-nav-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Amenities marquee: the track holds two back-to-back copies of the list,
+   animated exactly one copy-width so the loop is seamless. Pausing on
+   hover/focus (rather than stopping it entirely) keeps it readable
+   without giving up the auto-scroll. */
+@keyframes kt-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.kt-marquee-track {
+  animation: kt-marquee 40s linear infinite;
+}
+.kt-marquee:hover .kt-marquee-track,
+.kt-marquee:focus-within .kt-marquee-track {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kt-reveal {
     opacity: 1 !important;
@@ -63,5 +83,12 @@ body {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+  .kt-marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+  .kt-marquee {
+    overflow-x: auto !important;
   }
 }
