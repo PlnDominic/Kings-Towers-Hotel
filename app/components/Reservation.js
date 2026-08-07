@@ -10,12 +10,12 @@ const inputClass =
   "w-full border border-hairline bg-white px-4 py-[0.85rem] text-[0.92rem] text-ink placeholder:text-muted transition-colors duration-200 focus:border-accent focus:outline-none";
 
 const labelClass = "mb-2 block font-mono-label text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-muted";
+const EXPRESSPAY_SESSION_KEY = "kings-towers-expresspay";
 
 const STEPS = [
   { n: 1, label: "Select Date" },
   { n: 2, label: "Select Room" },
   { n: 3, label: "Your Details" },
-  { n: 4, label: "Complete" },
 ];
 
 function StepBar({ step }) {
@@ -94,7 +94,7 @@ export default function Reservation({
   initialPromo = "",
 }) {
   const [step, setStep] = useState(1);
-  const [status, setStatus] = useState("idle"); // idle | sending | error
+  const [status, setStatus] = useState("idle"); // idle | sending | redirecting | error
   const [error, setError] = useState("");
   const [roomId, setRoomId] = useState(initialRoomType);
   const [checkIn, setCheckIn] = useState(initialCheckIn);
@@ -114,30 +114,52 @@ export default function Reservation({
     e.preventDefault();
 
     const form = e.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
-    data.roomType = roomId;
-    data.checkIn = checkIn;
-    data.checkOut = checkOut;
-    data.guests = guestsLabel;
-    data.nights = String(nights);
-    if (subtotal != null) data.estimatedTotal = String(subtotal);
-    if (initialPromo) data.promo = initialPromo;
+    const reservation = Object.fromEntries(new FormData(form).entries());
+    reservation.roomType = roomId;
+    reservation.checkIn = checkIn;
+    reservation.checkOut = checkOut;
+    reservation.guests = guestsLabel;
+    reservation.nights = String(nights);
+    if (subtotal != null) reservation.estimatedTotal = String(subtotal);
+    if (initialPromo) reservation.promo = initialPromo;
 
     setStatus("sending");
     setError("");
 
     try {
-      const res = await fetch("/api/reservation", {
+      const res = await fetch("/api/expresspay/initiate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(reservation),
       });
       if (!res.ok) {
         const resBody = await res.json().catch(() => ({}));
         throw new Error(resBody.error || "Something went wrong. Please try again.");
       }
-      setStatus("idle");
-      setStep(4);
+
+      const payload = await res.json();
+      setStatus("redirecting");
+
+      if (typeof window !== "undefined") {
+        window.sessionStorage.setItem(
+          EXPRESSPAY_SESSION_KEY,
+          JSON.stringify({
+            orderId: payload.orderId,
+            token: payload.token,
+            checkoutUrl: payload.checkoutUrl,
+            reservation: {
+              ...reservation,
+              roomLabel: selectedRoom ? `${selectedRoom.title} - GHS ${selectedRoom.price}/night` : roomId,
+            },
+            createdAt: Date.now(),
+            status: "initiated",
+          })
+        );
+        window.location.assign(payload.checkoutUrl);
+        return;
+      }
+
+      throw new Error("Browser redirect is unavailable. Please try again.");
     } catch (err) {
       setStatus("error");
       setError(err.message);
@@ -172,8 +194,8 @@ export default function Reservation({
             Reserve Your Stay
           </h1>
           <p className="mx-auto mt-4 max-w-[46ch] text-[1rem] leading-[1.7] text-white/85">
-            Choose your dates and room — our team confirms availability and final pricing by phone or email.
-            Nothing is charged here.
+            Choose your dates, room, and guest details, then complete payment securely on ExpressPay.
+            Our team follows up after payment with your booking details.
           </p>
         </div>
       </section>
@@ -362,13 +384,13 @@ export default function Reservation({
                     </div>
 
                     <div className="mt-5 flex items-baseline justify-between border-t border-white/15 pt-5">
-                      <span className="text-[0.9rem] font-semibold text-white">Estimated total</span>
+                      <span className="text-[0.9rem] font-semibold text-white">Total to pay</span>
                       <span className="font-serif-display text-[1.7rem] font-medium text-accent-soft">
                         {subtotal != null ? `GHS ${subtotal}` : "—"}
                       </span>
                     </div>
                     <p className="mt-2 text-[0.72rem] leading-[1.5] text-white/45">
-                      Estimate only — final pricing and availability confirmed by our team.
+                      Charged securely with ExpressPay. Promo codes are reviewed manually by the reservations team.
                     </p>
                     {initialPromo && (
                       <p className="mt-3 border-t border-white/15 pt-3 text-[0.78rem] text-white/70">
@@ -380,26 +402,18 @@ export default function Reservation({
 
                 <button
                   type="submit"
-                  disabled={status === "sending"}
+                  disabled={status === "sending" || status === "redirecting"}
                   className={`${ctaBase} mt-8 w-full px-4 py-4 text-[0.9rem] tracking-[0.02em]`}
                 >
-                  {status === "sending" ? "Sending…" : "Request Booking"}
-                  {status !== "sending" && <CtaArrow />}
+                  {status === "sending"
+                    ? "Starting payment…"
+                    : status === "redirecting"
+                      ? "Redirecting to ExpressPay…"
+                      : "Pay with ExpressPay"}
+                  {status === "idle" || status === "error" ? <CtaArrow /> : null}
                 </button>
                 {status === "error" && <p className="mt-3 text-[0.82rem] text-red-400">{error}</p>}
               </div>
-            </div>
-          </section>
-        )}
-
-        {step === 4 && (
-          <section className="bg-white px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(4rem,10vh,7rem)]">
-            <div className="mx-auto max-w-[640px] border border-hairline bg-cream p-12 text-center">
-              <span className="font-mono-label text-[0.72rem] uppercase tracking-[0.22em] text-muted">Confirmed</span>
-              <p className="mt-3 font-serif-display text-[1.4rem] font-medium text-ink">
-                Thank you — we&#39;ve received your request.
-              </p>
-              <p className="mt-3 text-[0.92rem] text-body">We&#39;ll be in touch shortly to confirm your stay.</p>
             </div>
           </section>
         )}

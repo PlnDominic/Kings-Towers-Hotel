@@ -11,9 +11,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Email (reservation + newsletter forms)
+## Reservations, email, and ExpressPay
 
-Both the reservation form and the footer newsletter signup send mail via [Nodemailer](https://nodemailer.com) (`lib/mailer.js`), through the routes in `app/api/reservation/route.js` and `app/api/newsletter/route.js`.
+The reservation flow now starts an ExpressPay hosted checkout and only emails the hotel after the payment is successfully verified. The footer newsletter form still sends mail directly via [Nodemailer](https://nodemailer.com) (`lib/mailer.js`).
 
 Copy `.env.example` to `.env.local` and fill in real SMTP credentials:
 
@@ -28,9 +28,17 @@ SMTP_SECURE=false
 SMTP_USER=you@example.com
 SMTP_PASS=your-smtp-password-or-app-password
 # MAIL_FROM defaults to SMTP_USER; MAIL_TO defaults to kingsthl@yahoo.com
+
+EXPRESSPAY_MERCHANT_ID=your-expresspay-merchant-id
+EXPRESSPAY_API_KEY=your-expresspay-api-key
+EXPRESSPAY_ENVIRONMENT=sandbox
+# Required for hosted checkout redirects/webhooks in production:
+# APP_BASE_URL=https://your-public-https-domain.com
 ```
 
 Without valid SMTP credentials, both forms will show an error instead of silently succeeding — there's no fake "success" state, so submissions never look like they went through when no mail was actually sent.
+
+Without valid ExpressPay credentials, the reservation page will show an error when the guest tries to begin payment.
 
 ## Content notes
 
