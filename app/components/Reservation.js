@@ -136,8 +136,14 @@ export default function Reservation({
         const resBody = await res.json().catch(() => ({}));
         throw new Error(resBody.error || "Something went wrong. Please try again.");
       }
-      setStatus("idle");
-      setStep(4);
+      const resBody = await res.json();
+      if (resBody.checkoutUrl) {
+        setStatus("redirecting");
+        window.location.href = resBody.checkoutUrl;
+      } else {
+        setStatus("idle");
+        setStep(4);
+      }
     } catch (err) {
       setStatus("error");
       setError(err.message);
@@ -172,8 +178,7 @@ export default function Reservation({
             Reserve Your Stay
           </h1>
           <p className="mx-auto mt-4 max-w-[46ch] text-[1rem] leading-[1.7] text-white/85">
-            Choose your dates and room — our team confirms availability and final pricing by phone or email.
-            Nothing is charged here.
+            Choose your dates and room — complete your reservation securely with ExpressPay Ghana.
           </p>
         </div>
       </section>
@@ -368,7 +373,7 @@ export default function Reservation({
                       </span>
                     </div>
                     <p className="mt-2 text-[0.72rem] leading-[1.5] text-white/45">
-                      Estimate only — final pricing and availability confirmed by our team.
+                      Secure payment processed via ExpressPay Ghana. Your booking is confirmed upon successful payment.
                     </p>
                     {initialPromo && (
                       <p className="mt-3 border-t border-white/15 pt-3 text-[0.78rem] text-white/70">
@@ -380,11 +385,15 @@ export default function Reservation({
 
                 <button
                   type="submit"
-                  disabled={status === "sending"}
+                  disabled={status === "sending" || status === "redirecting"}
                   className={`${ctaBase} mt-8 w-full px-4 py-4 text-[0.9rem] tracking-[0.02em]`}
                 >
-                  {status === "sending" ? "Sending…" : "Request Booking"}
-                  {status !== "sending" && <CtaArrow />}
+                  {status === "sending"
+                    ? "Processing..."
+                    : status === "redirecting"
+                      ? "Redirecting to Payment..."
+                      : "Proceed to Payment"}
+                  {(status !== "sending" && status !== "redirecting") && <CtaArrow />}
                 </button>
                 {status === "error" && <p className="mt-3 text-[0.82rem] text-red-400">{error}</p>}
               </div>

@@ -1,20 +1,10 @@
 import { rooms } from "@/app/data";
-import { sendMail } from "@/lib/mailer";
 
 const ROOM_LABELS = Object.fromEntries(rooms.map((r) => [r.id, `${r.title} — GHS ${r.price}/night`]));
 
-// Header values (used in From/Reply-To/Subject) must not contain CR/LF,
-// otherwise user input could inject extra mail headers.
+// Header values must not contain CR/LF
 function sanitizeHeaderValue(value) {
   return String(value ?? "").replace(/[\r\n]+/g, " ").trim();
-}
-
-function escapeHtml(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 export async function POST(request) {
@@ -27,64 +17,95 @@ export async function POST(request) {
 
   const { name, email, phone, checkIn, checkOut, roomType, guests, nights, estimatedTotal, message, promo } = body || {};
 
-  if (!name || !email || !phone || !checkIn || !checkOut || !roomType) {
+  if (!name || !email || !phone || !checkIn || !checkOut || !roomType || !estimatedTotal) {
     return Response.json({ error: "Please fill in all required fields." }, { status: 400 });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return Response.json({ error: "Please provide a valid email address." }, { status: 400 });
   }
 
-  const safeName = sanitizeHeaderValue(name);
-  const safeEmail = sanitizeHeaderValue(email);
-  const roomLabel = ROOM_LABELS[roomType] || sanitizeHeaderValue(roomType);
-  const stayLabel = nights ? `${nights} night${Number(nights) > 1 ? "s" : ""}` : null;
-
-  const text = [
-    `New reservation request from the Kings Towers Hotel website`,
-    ``,
-    `Name: ${name}`,
-    `Email: ${email}`,
-    `Phone: ${phone}`,
-    `Check-in: ${checkIn}`,
-    `Check-out: ${checkOut}`,
-    stayLabel ? `Stay length: ${stayLabel}` : null,
-    guests ? `Guests: ${guests}` : null,
-    `Room type: ${roomLabel}`,
-    estimatedTotal ? `Estimated total: GHS ${estimatedTotal}` : null,
-    promo ? `Promo code: ${promo}` : null,
-    message ? `Message: ${message}` : null,
-  ]
-    .filter(Boolean)
-    .join("\n");
-
-  const html = `
-    <h2>New reservation request</h2>
-    <table cellpadding="4" cellspacing="0">
-      <tr><td><strong>Name</strong></td><td>${escapeHtml(name)}</td></tr>
-      <tr><td><strong>Email</strong></td><td>${escapeHtml(email)}</td></tr>
-      <tr><td><strong>Phone</strong></td><td>${escapeHtml(phone)}</td></tr>
-      <tr><td><strong>Check-in</strong></td><td>${escapeHtml(checkIn)}</td></tr>
-      <tr><td><strong>Check-out</strong></td><td>${escapeHtml(checkOut)}</td></tr>
-      ${stayLabel ? `<tr><td><strong>Stay length</strong></td><td>${escapeHtml(stayLabel)}</td></tr>` : ""}
-      ${guests ? `<tr><td><strong>Guests</strong></td><td>${escapeHtml(guests)}</td></tr>` : ""}
-      <tr><td><strong>Room type</strong></td><td>${escapeHtml(roomLabel)}</td></tr>
-      ${estimatedTotal ? `<tr><td><strong>Estimated total</strong></td><td>GHS ${escapeHtml(estimatedTotal)}</td></tr>` : ""}
-      ${promo ? `<tr><td><strong>Promo code</strong></td><td>${escapeHtml(promo)}</td></tr>` : ""}
-      ${message ? `<tr><td><strong>Message</strong></td><td>${escapeHtml(message)}</td></tr>` : ""}
-    </table>
-  `;
-
-  try {
-    await sendMail({
-      subject: `Reservation request from ${safeName} (${roomLabel})`,
-      text,
-      html,
-      replyTo: `${safeName} <${safeEmail}>`,
-    });
-  } catch (err) {
-    console.error("[reservation] failed to send mail:", err);
-    return Response.json({ error: "We couldn't send your request right now. Please call or email us instead." }, { status: 502 });
+  // Format phone number to international format (233XXXXXXXXX) for Ghana
+  let cleanPhone = phone.replace(/\D/g, "");
+  if (cleanPhone.startsWith("0")) {
+    cleanPhone = "233" + cleanPhone.substring(1);
+  }
+  if (!cleanPhone.startsWith("233")) {
+    cleanPhone = "233" + cleanPhone;
   }
 
-  return Response.json({ ok: true });
+  // Split name for ExpressPay
+  const nameParts = name.trim().split(/\s+/);
+  const firstname = sanitizeHeaderValue(nameParts[0] || "Guest");
+  const lastname = sanitizeHeaderValue(nameParts.slice(1).join(" ") || ".");
+
+  const orderId = `KTH-${Date.now()}`;
+  
+  // Dynamically determine the host and protocol for the callback URL
+  const host = request.headers.get("x-forwarded-host") || request.headers.get("host") || "localhost:3000";
+  const protocol = request.headers.get("x-forwarded-proto") || "http";
+  const baseUrl = `${protocol}://${host}`;
+
+  // We append all booking metadata as query params to the callback URL so we can send the email AFTER payment confirmation
+  const callbackUrl = `${baseUrl}/reservation/callback?` + new URLSearchParams({
+    name,
+    email,
+    phone,
+    checkIn,
+    checkOut,
+    roomType,
+    guests,
+    nights: String(nights),
+    estimatedTotal: String(estimatedTotal),
+    message: message || "",
+    promo: promo || "",
+    orderId
+  }).toString();
+
+  const isSandbox = process.env.EXPRESSPAY_SANDBOX === "true";
+  const submitUrl = isSandbox
+    ? "https://sandbox.expresspaygh.com/api/submit.php"
+    : "https://expresspaygh.com/api/submit.php";
+
+  const checkoutBaseUrl = isSandbox
+    ? "https://sandbox.expresspaygh.com/api/checkout.php"
+    : "https://expresspaygh.com/api/checkout.php";
+
+  const params = new URLSearchParams();
+  params.append("merchant-id", process.env.EXPRESSPAY_MERCHANT_ID || "");
+  params.append("api-key", process.env.EXPRESSPAY_API_KEY || "");
+  params.append("amount", parseFloat(estimatedTotal).toFixed(2));
+  params.append("currency", "GHS");
+  params.append("order-id", orderId);
+  params.append("redirect-url", callbackUrl);
+  params.append("firstname", firstname);
+  params.append("lastname", lastname);
+  params.append("email", email);
+  params.append("phonenumber", cleanPhone);
+
+  try {
+    const response = await fetch(submitUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: params.toString()
+    });
+
+    if (!response.ok) {
+      throw new Error(`ExpressPay Submit API returned HTTP ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (Number(result.status) === 1 && result.token) {
+      const checkoutUrl = `${checkoutBaseUrl}?token=${result.token}`;
+      return Response.json({ ok: true, checkoutUrl, token: result.token });
+    } else {
+      console.error("[reservation] ExpressPay payment initialization failed:", result);
+      return Response.json({ error: result.message || "Failed to initialize payment with ExpressPay. Please try again." }, { status: 502 });
+    }
+  } catch (err) {
+    console.error("[reservation] ExpressPay submit error:", err);
+    return Response.json({ error: "Failed to connect to the payment gateway. Please check your connection and try again." }, { status: 502 });
+  }
 }
