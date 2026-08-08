@@ -17,6 +17,16 @@ export async function POST(request) {
 
   const { name, email, phone, checkIn, checkOut, roomType, guests, nights, estimatedTotal, message, promo } = body || {};
 
+  const merchantId = process.env.EXPRESSPAY_MERCHANT_ID;
+  const apiKey = process.env.EXPRESSPAY_API_KEY;
+
+  if (!merchantId || !apiKey) {
+    return Response.json(
+      { error: "ExpressPay credentials are not configured on the server. Please set EXPRESSPAY_MERCHANT_ID and EXPRESSPAY_API_KEY in Vercel environment variables." },
+      { status: 400 }
+    );
+  }
+
   if (!name || !email || !phone || !checkIn || !checkOut || !roomType || !estimatedTotal) {
     return Response.json({ error: "Please fill in all required fields." }, { status: 400 });
   }
@@ -102,10 +112,10 @@ export async function POST(request) {
       return Response.json({ ok: true, checkoutUrl, token: result.token });
     } else {
       console.error("[reservation] ExpressPay payment initialization failed:", result);
-      return Response.json({ error: result.message || "Failed to initialize payment with ExpressPay. Please try again." }, { status: 502 });
+      return Response.json({ error: result.message || "Failed to initialize payment with ExpressPay. Please try again." }, { status: 400 });
     }
   } catch (err) {
     console.error("[reservation] ExpressPay submit error:", err);
-    return Response.json({ error: "Failed to connect to the payment gateway. Please check your connection and try again." }, { status: 502 });
+    return Response.json({ error: "Failed to connect to the payment gateway. Please check your connection and try again." }, { status: 400 });
   }
 }

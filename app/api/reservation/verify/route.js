@@ -39,6 +39,16 @@ export async function POST(request) {
     orderId
   } = body || {};
 
+  const merchantId = process.env.EXPRESSPAY_MERCHANT_ID;
+  const apiKey = process.env.EXPRESSPAY_API_KEY;
+
+  if (!merchantId || !apiKey) {
+    return Response.json(
+      { error: "ExpressPay credentials are not configured on the server. Please set EXPRESSPAY_MERCHANT_ID and EXPRESSPAY_API_KEY in Vercel environment variables." },
+      { status: 400 }
+    );
+  }
+
   if (!token) {
     return Response.json({ error: "Transaction token is required for verification." }, { status: 400 });
   }
@@ -205,6 +215,6 @@ export async function POST(request) {
     }
   } catch (err) {
     console.error("[reservation verify] ExpressPay query error:", err);
-    return Response.json({ error: "Failed to verify transaction status. Please contact support." }, { status: 502 });
+    return Response.json({ error: "Failed to verify transaction status. Please contact support." }, { status: 400 });
   }
 }
