@@ -92,6 +92,15 @@ export async function POST(request) {
   params.append("email", email);
   params.append("phonenumber", cleanPhone);
 
+  console.log("[reservation] Initiating ExpressPay request:", {
+    isSandbox,
+    submitUrl,
+    merchantIdLength: merchantId ? merchantId.length : 0,
+    merchantIdMasked: merchantId ? merchantId.substring(0, 4) + "..." : "none",
+    apiKeyLength: apiKey ? apiKey.length : 0,
+    apiKeyMasked: apiKey ? apiKey.substring(0, 8) + "..." + apiKey.substring(apiKey.length - 4) : "none"
+  });
+
   try {
     const response = await fetch(submitUrl, {
       method: "POST",

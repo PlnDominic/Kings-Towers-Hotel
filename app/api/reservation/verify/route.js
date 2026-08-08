@@ -82,7 +82,7 @@ export async function POST(request) {
     const resultStatus = Number(queryResult.result || queryResult.status);
 
     if (resultStatus === 1) {
-      const transactionId = queryResult.transaction_id || queryResult.transactionId || "N/A";
+      const transactionId = queryResult["transaction-id"] || queryResult.transaction_id || queryResult.transactionId || "N/A";
       const actualAmount = queryResult.amount || estimatedTotal;
       const actualCurrency = queryResult.currency || "GHS";
 
@@ -176,6 +176,7 @@ export async function POST(request) {
 
         // Also send a confirmation receipt email to the customer!
         await sendMail({
+          to: safeEmail,
           subject: `Your Booking Confirmation & Receipt - Kings Towers Hotel`,
           text: `Hi ${name},\n\nThank you for choosing Kings Towers Hotel. Your booking has been successfully confirmed and payment of ${actualCurrency} ${actualAmount} has been processed.\n\nTransaction Details:\n${text}\n\nWe look forward to welcoming you!`,
           html: `

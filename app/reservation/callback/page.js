@@ -27,7 +27,8 @@ function CallbackContent() {
   const estimatedTotal = searchParams.get("estimatedTotal") || "0";
   const message = searchParams.get("message") || "";
   const promo = searchParams.get("promo") || "";
-  const orderId = searchParams.get("orderId") || "";
+  const orderIdRaw = searchParams.get("orderId") || "";
+  const orderId = orderIdRaw.split("?")[0];
 
   const selectedRoom = rooms.find((r) => r.id === roomType) || null;
 
