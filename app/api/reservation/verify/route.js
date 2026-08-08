@@ -166,39 +166,47 @@ export async function POST(request) {
       `;
 
       try {
-        // Send email to the hotel
-        await sendMail({
-          subject: `PAID RESERVATION: ${safeName} (${roomLabel})`,
-          text,
-          html,
-          replyTo: `${safeName} <${safeEmail}>`,
-        });
-
-        // Also send a confirmation receipt email to the customer!
-        await sendMail({
-          to: safeEmail,
-          subject: `Your Booking Confirmation & Receipt - Kings Towers Hotel`,
-          text: `Hi ${name},\n\nThank you for choosing Kings Towers Hotel. Your booking has been successfully confirmed and payment of ${actualCurrency} ${actualAmount} has been processed.\n\nTransaction Details:\n${text}\n\nWe look forward to welcoming you!`,
-          html: `
-            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-              <h2 style="color: #ea580c; border-bottom: 2px solid #f97316; padding-bottom: 10px; margin-top: 0;">Booking Confirmed</h2>
-              <p>Hi <strong>${escapeHtml(name)}</strong>,</p>
-              <p>Thank you for choosing Kings Towers Hotel. We are pleased to confirm your booking and payment receipt details below.</p>
-              
-              ${html}
-              
-              <div style="margin-top: 25px; font-size: 14px; color: #555; text-align: center;">
-                <p>If you have any questions, please contact us at <a href="mailto:kingstowershotel@gmail.com">kingstowershotel@gmail.com</a>.</p>
-                <p style="font-weight: bold;">We look forward to welcoming you!</p>
+        const mailPromises = [
+          // Send email to the hotel
+          sendMail({
+            subject: `PAID RESERVATION: ${safeName} (${roomLabel})`,
+            text,
+            html,
+            replyTo: `${safeName} <${safeEmail}>`,
+          }),
+          // Also send a confirmation receipt email to the customer!
+          sendMail({
+            to: safeEmail,
+            subject: `Your Booking Confirmation & Receipt - Kings Towers Hotel`,
+            text: `Hi ${name},\n\nThank you for choosing Kings Towers Hotel. Your booking has been successfully confirmed and payment of ${actualCurrency} ${actualAmount} has been processed.\n\nTransaction Details:\n${text}\n\nWe look forward to welcoming you!`,
+            html: `
+              <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+                <h2 style="color: #ea580c; border-bottom: 2px solid #f97316; padding-bottom: 10px; margin-top: 0;">Booking Confirmed</h2>
+                <p>Hi <strong>${escapeHtml(name)}</strong>,</p>
+                <p>Thank you for choosing Kings Towers Hotel. We are pleased to confirm your booking and payment receipt details below.</p>
+                
+                ${html}
+                
+                <div style="margin-top: 25px; font-size: 14px; color: #555; text-align: center;">
+                  <p>If you have any questions, please contact us at <a href="mailto:kingstowershotel@gmail.com">kingstowershotel@gmail.com</a>.</p>
+                  <p style="font-weight: bold;">We look forward to welcoming you!</p>
+                </div>
               </div>
-            </div>
-          `,
-          replyTo: "kingstowershotel@gmail.com",
-        });
+            `,
+            replyTo: "kingstowershotel@gmail.com",
+          })
+        ];
 
+        const mailResults = await Promise.allSettled(mailPromises);
+        mailResults.forEach((res, index) => {
+          if (res.status === "rejected") {
+            console.error(`[reservation verify] Email #${index + 1} failed to send:`, res.reason);
+          } else {
+            console.log(`[reservation verify] Email #${index + 1} sent successfully.`);
+          }
+        });
       } catch (err) {
-        console.error("[reservation verify] Failed to send email:", err);
-        // Note: We still return success: true because the payment WAS successful.
+        console.error("[reservation verify] Failed during parallel email dispatch:", err);
       }
 
       return Response.json({
