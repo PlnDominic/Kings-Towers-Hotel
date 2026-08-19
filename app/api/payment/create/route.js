@@ -20,6 +20,14 @@ function toGhanaIntlPhone(phone) {
   return digits;
 }
 
+// Recomputed from the dates rather than trusting the client's `nights`
+// field — the charge amount must never be derived from anything the
+// guest's browser sent us directly.
+function nightsBetween(checkIn, checkOut) {
+  const diff = Math.round((new Date(checkOut) - new Date(checkIn)) / 86400000);
+  return diff > 0 ? diff : 0;
+}
+
 export async function POST(request) {
   let body;
   try {
@@ -28,7 +36,7 @@ export async function POST(request) {
     return Response.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, email, phone, checkIn, checkOut, roomType, guests, nights, estimatedTotal, message, promo } = body || {};
+  const { name, email, phone, checkIn, checkOut, roomType, guests, message, promo } = body || {};
 
   if (!name || !email || !phone || !checkIn || !checkOut || !roomType) {
     return Response.json({ error: "Please fill in all required fields." }, { status: 400 });
@@ -42,9 +50,15 @@ export async function POST(request) {
     return Response.json({ error: "Please select a valid room type." }, { status: 400 });
   }
 
-  // Deposit policy: first night's rate, balance due at check-in. Kept as a
-  // single obvious line so it's easy to change to a percentage later.
-  const depositAmount = Number(room.price);
+  const serverNights = nightsBetween(checkIn, checkOut);
+  if (serverNights <= 0) {
+    return Response.json({ error: "Check-out must be after check-in." }, { status: 400 });
+  }
+
+  // Deposit policy: 50% of the full stay, balance due at check-in. Total is
+  // computed from the room's own rate × nights — never from client input.
+  const stayTotal = serverNights * Number(room.price);
+  const depositAmount = Math.round(stayTotal * 0.5);
   if (!depositAmount || depositAmount <= 0) {
     return Response.json({ error: "That room doesn't have a valid rate configured." }, { status: 500 });
   }
@@ -63,8 +77,8 @@ export async function POST(request) {
     checkIn,
     checkOut,
     guests,
-    nights,
-    total: estimatedTotal,
+    nights: serverNights,
+    total: stayTotal,
     deposit: depositAmount,
     message,
     promo,
