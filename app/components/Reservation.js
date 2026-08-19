@@ -15,7 +15,6 @@ const STEPS = [
   { n: 1, label: "Select Date" },
   { n: 2, label: "Select Room" },
   { n: 3, label: "Your Details" },
-  { n: 4, label: "Complete" },
 ];
 
 function StepBar({ step }) {
@@ -105,6 +104,9 @@ export default function Reservation({
   const selectedRoom = rooms.find((r) => r.id === roomId) || null;
   const nights = useMemo(() => nightsBetween(checkIn, checkOut), [checkIn, checkOut]);
   const subtotal = selectedRoom && nights > 0 ? nights * Number(selectedRoom.price) : null;
+  // Deposit policy: first night's rate, paid online now; the rest of the
+  // stay is settled at check-in.
+  const deposit = selectedRoom ? Number(selectedRoom.price) : null;
   const guestsLabel = `${adults} adult${adults > 1 ? "s" : ""}${children > 0 ? `, ${children} child${children > 1 ? "ren" : ""}` : ""}`;
 
   const canLeaveStep1 = checkIn && checkOut && nights > 0;
@@ -127,17 +129,18 @@ export default function Reservation({
     setError("");
 
     try {
-      const res = await fetch("/api/reservation", {
+      const res = await fetch("/api/payment/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      if (!res.ok) {
-        const resBody = await res.json().catch(() => ({}));
+      const resBody = await res.json().catch(() => ({}));
+      if (!res.ok || !resBody.checkoutUrl) {
         throw new Error(resBody.error || "Something went wrong. Please try again.");
       }
-      setStatus("idle");
-      setStep(4);
+      // Full navigation, not a fetch — the guest pays on expressPay's own
+      // hosted page and comes back to /reservation/payment-result.
+      window.location.href = resBody.checkoutUrl;
     } catch (err) {
       setStatus("error");
       setError(err.message);
@@ -172,8 +175,8 @@ export default function Reservation({
             Reserve Your Stay
           </h1>
           <p className="mx-auto mt-4 max-w-[46ch] text-[1rem] leading-[1.7] text-white/85">
-            Choose your dates and room — our team confirms availability and final pricing by phone or email.
-            Nothing is charged here.
+            Choose your dates and room, then pay a small deposit online to hold your booking — the balance is
+            settled at check-in.
           </p>
         </div>
       </section>
@@ -362,13 +365,14 @@ export default function Reservation({
                     </div>
 
                     <div className="mt-5 flex items-baseline justify-between border-t border-white/15 pt-5">
-                      <span className="text-[0.9rem] font-semibold text-white">Estimated total</span>
+                      <span className="text-[0.9rem] font-semibold text-white">Deposit due now</span>
                       <span className="font-serif-display text-[1.7rem] font-medium text-accent-soft">
-                        {subtotal != null ? `GHS ${subtotal}` : "—"}
+                        {deposit != null ? `GHS ${deposit}` : "—"}
                       </span>
                     </div>
                     <p className="mt-2 text-[0.72rem] leading-[1.5] text-white/45">
-                      Estimate only — final pricing and availability confirmed by our team.
+                      First night&#39;s rate, paid online now to hold your room. Estimated total for the full stay:{" "}
+                      {subtotal != null ? `GHS ${subtotal}` : "—"} — the balance is settled at check-in.
                     </p>
                     {initialPromo && (
                       <p className="mt-3 border-t border-white/15 pt-3 text-[0.78rem] text-white/70">
@@ -383,23 +387,11 @@ export default function Reservation({
                   disabled={status === "sending"}
                   className={`${ctaBase} mt-8 w-full px-4 py-4 text-[0.9rem] tracking-[0.02em]`}
                 >
-                  {status === "sending" ? "Sending…" : "Request Booking"}
+                  {status === "sending" ? "Redirecting to payment…" : "Pay Deposit & Book"}
                   {status !== "sending" && <CtaArrow />}
                 </button>
                 {status === "error" && <p className="mt-3 text-[0.82rem] text-red-400">{error}</p>}
               </div>
-            </div>
-          </section>
-        )}
-
-        {step === 4 && (
-          <section className="bg-white px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(4rem,10vh,7rem)]">
-            <div className="mx-auto max-w-[640px] border border-hairline bg-cream p-12 text-center">
-              <span className="font-mono-label text-[0.72rem] uppercase tracking-[0.22em] text-muted">Confirmed</span>
-              <p className="mt-3 font-serif-display text-[1.4rem] font-medium text-ink">
-                Thank you — we&#39;ve received your request.
-              </p>
-              <p className="mt-3 text-[0.92rem] text-body">We&#39;ll be in touch shortly to confirm your stay.</p>
             </div>
           </section>
         )}

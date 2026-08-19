@@ -1,0 +1,98 @@
+import { rooms } from "@/app/data";
+import { submitPayment, checkoutUrl, encodeRef } from "@/lib/expresspay";
+import { sanitizeHeaderValue } from "@/lib/mailFormat";
+
+const ROOM_LABELS = Object.fromEntries(rooms.map((r) => [r.id, r.title]));
+
+function splitName(fullName) {
+  const parts = String(fullName).trim().split(/\s+/);
+  const firstname = parts[0] || "Guest";
+  const lastname = parts.slice(1).join(" ") || firstname;
+  return { firstname, lastname };
+}
+
+export async function POST(request) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  const { name, email, phone, checkIn, checkOut, roomType, guests, nights, estimatedTotal, message, promo } = body || {};
+
+  if (!name || !email || !phone || !checkIn || !checkOut || !roomType) {
+    return Response.json({ error: "Please fill in all required fields." }, { status: 400 });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return Response.json({ error: "Please provide a valid email address." }, { status: 400 });
+  }
+
+  const room = rooms.find((r) => r.id === roomType);
+  if (!room) {
+    return Response.json({ error: "Please select a valid room type." }, { status: 400 });
+  }
+
+  // Deposit policy: first night's rate, balance due at check-in. Kept as a
+  // single obvious line so it's easy to change to a percentage later.
+  const depositAmount = Number(room.price);
+  if (!depositAmount || depositAmount <= 0) {
+    return Response.json({ error: "That room doesn't have a valid rate configured." }, { status: 500 });
+  }
+
+  const { firstname, lastname } = splitName(name);
+  const orderId = `KTH-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`.toUpperCase();
+
+  const ref = encodeRef({
+    orderId,
+    name: sanitizeHeaderValue(name),
+    email: sanitizeHeaderValue(email),
+    phone: sanitizeHeaderValue(phone),
+    roomType,
+    roomLabel: ROOM_LABELS[roomType],
+    checkIn,
+    checkOut,
+    guests,
+    nights,
+    total: estimatedTotal,
+    deposit: depositAmount,
+    message,
+    promo,
+  });
+
+  const origin = new URL(request.url).origin;
+
+  let submitResult;
+  try {
+    submitResult = await submitPayment({
+      "order-id": orderId,
+      currency: "GHS",
+      amount: depositAmount.toFixed(2),
+      firstname,
+      lastname,
+      email,
+      phonenumber: phone,
+      username: email,
+      accountnumber: phone,
+      "order-desc": `Deposit — ${ROOM_LABELS[roomType]}, ${checkIn} to ${checkOut}`,
+      "redirect-url": `${origin}/reservation/payment-result?ref=${ref}`,
+      "post-url": `${origin}/api/payment/notify?ref=${ref}`,
+    });
+  } catch (err) {
+    console.error("[payment] expressPay submit failed:", err);
+    return Response.json(
+      { error: "We couldn't start the payment right now. Please call or email us instead." },
+      { status: 502 }
+    );
+  }
+
+  if (submitResult?.status !== 1 || !submitResult.token) {
+    console.error("[payment] expressPay rejected submit:", submitResult);
+    return Response.json(
+      { error: submitResult?.message || "Payment couldn't be started. Please try again." },
+      { status: 502 }
+    );
+  }
+
+  return Response.json({ checkoutUrl: checkoutUrl(submitResult.token) });
+}

@@ -1,21 +1,8 @@
 import { rooms } from "@/app/data";
 import { sendMail } from "@/lib/mailer";
+import { sanitizeHeaderValue, escapeHtml } from "@/lib/mailFormat";
 
 const ROOM_LABELS = Object.fromEntries(rooms.map((r) => [r.id, `${r.title} — GHS ${r.price}/night`]));
-
-// Header values (used in From/Reply-To/Subject) must not contain CR/LF,
-// otherwise user input could inject extra mail headers.
-function sanitizeHeaderValue(value) {
-  return String(value ?? "").replace(/[\r\n]+/g, " ").trim();
-}
-
-function escapeHtml(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 export async function POST(request) {
   let body;
