@@ -11,6 +11,15 @@ function splitName(fullName) {
   return { firstname, lastname };
 }
 
+// expressPay expects Ghana numbers in international format (233XXXXXXXXX),
+// not the local 0XXXXXXXXX form guests naturally type.
+function toGhanaIntlPhone(phone) {
+  let digits = String(phone).replace(/\D/g, "");
+  if (digits.startsWith("0")) digits = "233" + digits.slice(1);
+  if (!digits.startsWith("233")) digits = "233" + digits;
+  return digits;
+}
+
 export async function POST(request) {
   let body;
   try {
@@ -41,6 +50,7 @@ export async function POST(request) {
   }
 
   const { firstname, lastname } = splitName(name);
+  const intlPhone = toGhanaIntlPhone(phone);
   const orderId = `KTH-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`.toUpperCase();
 
   const ref = encodeRef({
@@ -71,18 +81,20 @@ export async function POST(request) {
       firstname,
       lastname,
       email,
-      phonenumber: phone,
+      phonenumber: intlPhone,
       username: email,
-      accountnumber: phone,
+      accountnumber: intlPhone,
       "order-desc": `Deposit — ${ROOM_LABELS[roomType]}, ${checkIn} to ${checkOut}`,
       "redirect-url": `${origin}/reservation/payment-result?ref=${ref}`,
       "post-url": `${origin}/api/payment/notify?ref=${ref}`,
     });
   } catch (err) {
     console.error("[payment] expressPay submit failed:", err);
+    // Not 502/503/504 — Vercel replaces those with its own generic error
+    // page instead of passing our JSON body through to the client.
     return Response.json(
       { error: "We couldn't start the payment right now. Please call or email us instead." },
-      { status: 502 }
+      { status: 400 }
     );
   }
 
@@ -90,7 +102,7 @@ export async function POST(request) {
     console.error("[payment] expressPay rejected submit:", submitResult);
     return Response.json(
       { error: submitResult?.message || "Payment couldn't be started. Please try again." },
-      { status: 502 }
+      { status: 400 }
     );
   }
 
