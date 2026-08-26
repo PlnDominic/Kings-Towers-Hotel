@@ -55,10 +55,11 @@ export async function POST(request) {
     return Response.json({ error: "Check-out must be after check-in." }, { status: 400 });
   }
 
-  // Deposit policy: 50% of the full stay, balance due at check-in. Total is
-  // computed from the room's own rate × nights — never from client input.
+  // Deposit policy: 100% of the first night's rate, balance due at
+  // check-in. Total is computed from the room's own rate × nights — never
+  // from client input.
   const stayTotal = serverNights * Number(room.price);
-  const depositAmount = Math.round(stayTotal * 0.5);
+  const depositAmount = Number(room.price);
   if (!depositAmount || depositAmount <= 0) {
     return Response.json({ error: "That room doesn't have a valid rate configured." }, { status: 500 });
   }

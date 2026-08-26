@@ -104,9 +104,9 @@ export default function Reservation({
   const selectedRoom = rooms.find((r) => r.id === roomId) || null;
   const nights = useMemo(() => nightsBetween(checkIn, checkOut), [checkIn, checkOut]);
   const subtotal = selectedRoom && nights > 0 ? nights * Number(selectedRoom.price) : null;
-  // Deposit policy: 50% of the full stay, paid online now; the rest is
-  // settled at check-in.
-  const deposit = subtotal != null ? Math.round(subtotal * 0.5) : null;
+  // Deposit policy: 100% of the first night's rate, paid online now; the
+  // rest of the stay is settled at check-in.
+  const deposit = selectedRoom ? Number(selectedRoom.price) : null;
   const guestsLabel = `${adults} adult${adults > 1 ? "s" : ""}${children > 0 ? `, ${children} child${children > 1 ? "ren" : ""}` : ""}`;
 
   const canLeaveStep1 = checkIn && checkOut && nights > 0;
@@ -371,8 +371,8 @@ export default function Reservation({
                       </span>
                     </div>
                     <p className="mt-2 text-[0.72rem] leading-[1.5] text-white/45">
-                      50% of your stay, paid online now to hold your room. Estimated total for the full stay:{" "}
-                      {subtotal != null ? `GHS ${subtotal}` : "—"} — the remaining 50% is settled at check-in.
+                      First night&#39;s rate, paid online now to hold your room. Estimated total for the full stay:{" "}
+                      {subtotal != null ? `GHS ${subtotal}` : "—"} — the balance is settled at check-in.
                     </p>
                     {initialPromo && (
                       <p className="mt-3 border-t border-white/15 pt-3 text-[0.78rem] text-white/70">
