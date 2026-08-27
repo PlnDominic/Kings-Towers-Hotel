@@ -95,7 +95,7 @@ export default function Footer() {
           <p className="mt-4 text-[0.88rem] leading-[1.7] text-white/85">
             kingstowershotel@gmail.com
             <br />
-            info@kingstowershotelltd.com
+            info@kingstowers-hotel.com
             <br />
             T: 020 88 88 123 · 026 57 37 917
             <br />
