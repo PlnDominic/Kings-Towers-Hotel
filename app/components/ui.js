@@ -57,3 +57,24 @@ export function SerifHeading({ children }) {
 // `text-inherit` utility class does not — see Header.js).
 export const navLinkClass =
   "relative no-underline after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full";
+
+// A "look here" callout, not a real control — it's `pointer-events-none`
+// and purely decorative, sitting next to the actual clickable thing
+// (a calendar day, a room card, the submit button) to point first-time
+// guests at it. The caller positions it: wrap the target in `relative`
+// and pass absolute-position classes for `className` (e.g. `-top-4
+// right-2`). `rotate` sets the resting tilt in degrees — pass it as a
+// prop, not a Tailwind rotate-* class, since the bounce animation drives
+// `transform` on every frame and would silently override a static one.
+export function ClickHereTag({ text = "Click Here!", className = "", rotate = -6 }) {
+  return (
+    <span
+      aria-hidden="true"
+      style={{ "--kt-tag-rotate": `${rotate}deg` }}
+      className={`kt-click-bounce pointer-events-none absolute z-30 inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-3.5 py-1.5 font-mono-label text-[0.7rem] font-bold uppercase tracking-[0.04em] text-white shadow-[0_10px_24px_-8px_rgba(226,35,26,0.75)] ${className}`}
+    >
+      {text}
+      <span className="text-[0.95rem] leading-none">👆</span>
+    </span>
+  );
+}

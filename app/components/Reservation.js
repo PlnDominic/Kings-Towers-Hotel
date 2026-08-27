@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { rooms } from "../data";
-import { ctaBase, CtaArrow } from "./ui";
+import { ctaBase, ClickHereTag, CtaArrow } from "./ui";
 import BookingCalendar from "./BookingCalendar";
 
 const inputClass =
@@ -203,15 +203,18 @@ export default function Reservation({
                   <CounterField label="Adults" value={adults} onChange={setAdults} min={1} />
                   <CounterField label="Children" value={children} onChange={setChildren} min={0} />
                 </div>
-                <button
-                  type="button"
-                  disabled={!canLeaveStep1}
-                  onClick={() => setStep(2)}
-                  className={`${ctaBase} w-full px-4 py-4 text-[0.9rem] tracking-[0.02em] disabled:cursor-not-allowed disabled:opacity-40`}
-                >
-                  Continue
-                  <CtaArrow />
-                </button>
+                <div className="relative">
+                  {canLeaveStep1 && <ClickHereTag text="Click Here!" className="-top-4 right-2" rotate={-5} />}
+                  <button
+                    type="button"
+                    disabled={!canLeaveStep1}
+                    onClick={() => setStep(2)}
+                    className={`${ctaBase} w-full px-4 py-4 text-[0.9rem] tracking-[0.02em] disabled:cursor-not-allowed disabled:opacity-40`}
+                  >
+                    Continue
+                    <CtaArrow />
+                  </button>
+                </div>
               </div>
             </div>
           </section>
@@ -219,7 +222,9 @@ export default function Reservation({
 
         {step === 2 && (
           <section className="kt-pop-in bg-white px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(3rem,8vh,5rem)]">
-            <div className="mx-auto max-w-[1180px]">
+            <div className="relative mx-auto max-w-[1180px]">
+              {/* Points at the room grid until one is picked. */}
+              {!roomId && <ClickHereTag text="Tap a room!" className="-top-4 left-2 sm:left-1/4" rotate={5} />}
               <div className="grid grid-cols-1 gap-6 min-[561px]:grid-cols-2 min-[1024px]:grid-cols-4">
                 {rooms.map((room) => {
                   const selected = room.id === roomId;
@@ -277,15 +282,18 @@ export default function Reservation({
                 >
                   <span className="inline-block transition-transform duration-200 group-hover:-translate-x-0.5">←</span> Back
                 </button>
-                <button
-                  type="button"
-                  disabled={!canLeaveStep2}
-                  onClick={() => setStep(3)}
-                  className={`${ctaBase} px-8 py-4 text-[0.9rem] tracking-[0.02em] disabled:cursor-not-allowed disabled:opacity-40`}
-                >
-                  Continue
-                  <CtaArrow />
-                </button>
+                <div className="relative">
+                  {canLeaveStep2 && <ClickHereTag text="Click Here!" className="-top-4 right-2" rotate={-5} />}
+                  <button
+                    type="button"
+                    disabled={!canLeaveStep2}
+                    onClick={() => setStep(3)}
+                    className={`${ctaBase} px-8 py-4 text-[0.9rem] tracking-[0.02em] disabled:cursor-not-allowed disabled:opacity-40`}
+                  >
+                    Continue
+                    <CtaArrow />
+                  </button>
+                </div>
               </div>
             </div>
           </section>
@@ -382,14 +390,21 @@ export default function Reservation({
                   </>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={status === "sending"}
-                  className={`${ctaBase} mt-8 w-full px-4 py-4 text-[0.9rem] tracking-[0.02em]`}
-                >
-                  {status === "sending" ? "Redirecting to payment…" : "Pay Deposit & Book"}
-                  {status !== "sending" && <CtaArrow />}
-                </button>
+                <div className="relative mt-8">
+                  {/* This is the last click of the flow — always points
+                      here, not conditionally, since it's the goal. */}
+                  {status !== "sending" && (
+                    <ClickHereTag text="Click Here to Book!" className="-top-5 right-2" rotate={-4} />
+                  )}
+                  <button
+                    type="submit"
+                    disabled={status === "sending"}
+                    className={`${ctaBase} w-full px-4 py-4 text-[0.9rem] tracking-[0.02em]`}
+                  >
+                    {status === "sending" ? "Redirecting to payment…" : "Pay Deposit & Book"}
+                    {status !== "sending" && <CtaArrow />}
+                  </button>
+                </div>
                 {status === "error" && <p className="mt-3 text-[0.82rem] text-red-400">{error}</p>}
               </div>
             </div>

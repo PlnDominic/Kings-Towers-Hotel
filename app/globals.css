@@ -105,6 +105,24 @@ body {
   animation: kt-attention-pulse 1.8s ease-in-out infinite;
 }
 
+/* ClickHereTag (ui.js) — a flashy "look here" callout: bounces, wobbles
+   and glows to draw the eye to whichever real control it's pinned next
+   to (a calendar day, a room card, the submit button). */
+@keyframes kt-click-bounce {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--kt-tag-rotate, -6deg));
+    box-shadow: 0 10px 24px -8px rgba(226, 35, 26, 0.75);
+  }
+  50% {
+    transform: translateY(-8px) rotate(calc(var(--kt-tag-rotate, -6deg) * -1));
+    box-shadow: 0 16px 30px -8px rgba(226, 35, 26, 0.9);
+  }
+}
+.kt-click-bounce {
+  animation: kt-click-bounce 1.1s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kt-reveal {
     opacity: 1 !important;
@@ -131,5 +149,10 @@ body {
   .kt-attention-pulse {
     animation: none !important;
     opacity: 1 !important;
+  }
+  .kt-click-bounce {
+    animation: none !important;
+    transform: none !important;
+    box-shadow: 0 10px 24px -8px rgba(226, 35, 26, 0.75) !important;
   }
 }

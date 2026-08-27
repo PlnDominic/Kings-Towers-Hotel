@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ClickHereTag } from "./ui";
 
 const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 const MONTH_NAMES = [
@@ -106,7 +107,10 @@ export default function BookingCalendar({ checkIn, checkOut, onChange }) {
   }
 
   return (
-    <div className="bg-near-black p-6 min-[700px]:p-8">
+    <div className="relative bg-near-black p-6 min-[700px]:p-8">
+      {/* Points guests at the grid until they've clicked a first date;
+          disappears once check-in is picked so it never nags. */}
+      {!checkIn && <ClickHereTag text="Click a date!" className="-top-4 right-6 min-[700px]:right-10" />}
       <div className="flex items-start gap-4 min-[700px]:gap-8">
         <button
           type="button"
