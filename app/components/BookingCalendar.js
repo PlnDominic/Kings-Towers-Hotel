@@ -51,7 +51,9 @@ export default function BookingCalendar({ checkIn, checkOut, onChange }) {
 
   function renderMonth(year, month) {
     return (
-      <div className="flex-1">
+      // Keyed by year-month so switching months (via ‹ ›) remounts this
+      // block and replays the pop-in animation instead of jump-cutting.
+      <div key={`${year}-${month}`} className="kt-pop-in flex-1">
         <p className="mb-4 text-center font-display text-[1rem] font-bold text-white">
           {MONTH_NAMES[month]} {year}
         </p>
@@ -73,7 +75,9 @@ export default function BookingCalendar({ checkIn, checkOut, onChange }) {
                 type="button"
                 disabled={isPast}
                 onClick={() => handlePick(iso)}
-                className="mx-auto flex h-9 w-9 items-center justify-center text-[0.85rem] transition-colors duration-150 disabled:cursor-not-allowed"
+                className={`mx-auto flex h-9 w-9 items-center justify-center rounded-full text-[0.85rem] transition-all duration-200 ease-out disabled:cursor-not-allowed ${
+                  isEdge ? "scale-110 font-bold shadow-[0_0_0_4px_rgba(226,35,26,0.25)]" : "enabled:hover:scale-110"
+                }`}
                 style={{
                   color: isPast ? "rgba(255,255,255,0.25)" : isEdge ? "#fff" : "rgba(255,255,255,0.85)",
                   background: isEdge
@@ -108,7 +112,7 @@ export default function BookingCalendar({ checkIn, checkOut, onChange }) {
           type="button"
           onClick={() => shiftMonth(-1)}
           aria-label="Previous month"
-          className="flex h-8 w-8 shrink-0 items-center justify-center border-0 bg-white/10 text-white transition-colors duration-200 hover:bg-white/20"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-0 bg-white/10 text-white transition-all duration-200 hover:scale-110 hover:bg-white/20 active:scale-95"
         >
           ‹
         </button>
@@ -120,12 +124,21 @@ export default function BookingCalendar({ checkIn, checkOut, onChange }) {
           type="button"
           onClick={() => shiftMonth(1)}
           aria-label="Next month"
-          className="flex h-8 w-8 shrink-0 items-center justify-center border-0 bg-white/10 text-white transition-colors duration-200 hover:bg-white/20"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-0 bg-white/10 text-white transition-all duration-200 hover:scale-110 hover:bg-white/20 active:scale-95"
         >
           ›
         </button>
       </div>
-      <p className="mt-6 border-t border-white/10 pt-4 text-center text-[0.82rem] text-white/50">
+      {/* Keyed by message text, so each state change (empty → check-in
+          picked → range complete) remounts this line and replays the
+          pop-in. The very first prompt also pulses gently to draw the
+          eye to the calendar before the guest has clicked anything. */}
+      <p
+        key={checkIn && checkOut ? "range" : checkIn ? "checkout" : "empty"}
+        className={`kt-pop-in mt-6 border-t border-white/10 pt-4 text-center text-[1.05rem] font-bold text-white min-[700px]:text-[1.15rem] ${
+          !checkIn ? "kt-attention-pulse" : ""
+        }`}
+      >
         {checkIn && checkOut
           ? `${checkIn}  →  ${checkOut}`
           : checkIn

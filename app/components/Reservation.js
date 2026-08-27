@@ -185,7 +185,7 @@ export default function Reservation({
 
       <form onSubmit={onSubmit}>
         {step === 1 && (
-          <section className="bg-near-black px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(3rem,8vh,5rem)]">
+          <section className="kt-pop-in bg-near-black px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(3rem,8vh,5rem)]">
             <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-8 min-[900px]:grid-cols-[1fr_18rem]">
               <BookingCalendar
                 checkIn={checkIn}
@@ -218,7 +218,7 @@ export default function Reservation({
         )}
 
         {step === 2 && (
-          <section className="bg-white px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(3rem,8vh,5rem)]">
+          <section className="kt-pop-in bg-white px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(3rem,8vh,5rem)]">
             <div className="mx-auto max-w-[1180px]">
               <div className="grid grid-cols-1 gap-6 min-[561px]:grid-cols-2 min-[1024px]:grid-cols-4">
                 {rooms.map((room) => {
@@ -273,9 +273,9 @@ export default function Reservation({
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="font-mono-label text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-muted transition-colors duration-200 hover:text-accent"
+                  className="group font-mono-label text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-muted transition-all duration-200 hover:-translate-x-0.5 hover:text-accent"
                 >
-                  ← Back
+                  <span className="inline-block transition-transform duration-200 group-hover:-translate-x-0.5">←</span> Back
                 </button>
                 <button
                   type="button"
@@ -292,7 +292,7 @@ export default function Reservation({
         )}
 
         {step === 3 && (
-          <section className="bg-white px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(3rem,8vh,5rem)]">
+          <section className="kt-pop-in bg-white px-[clamp(1.25rem,5vw,5.5rem)] py-[clamp(3rem,8vh,5rem)]">
             <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-14 min-[900px]:grid-cols-[1fr_22rem]">
               <div>
                 <div className="grid grid-cols-1 gap-5 min-[561px]:grid-cols-2">
@@ -322,9 +322,9 @@ export default function Reservation({
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="mt-8 font-mono-label text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-muted transition-colors duration-200 hover:text-accent"
+                  className="group mt-8 font-mono-label text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-muted transition-all duration-200 hover:-translate-x-0.5 hover:text-accent"
                 >
-                  ← Back
+                  <span className="inline-block transition-transform duration-200 group-hover:-translate-x-0.5">←</span> Back
                 </button>
               </div>
 

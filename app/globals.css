@@ -73,6 +73,38 @@ body {
   animation-play-state: paused;
 }
 
+/* Booking calendar: a quick pop-in for the month grid and the helper
+   line underneath whenever they change (new month, new selection state),
+   and a slow attention pulse on the helper line while no date is picked
+   yet — nudges first-time visitors toward the calendar without being a
+   constant distraction once they've started picking dates. */
+@keyframes kt-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.kt-pop-in {
+  animation: kt-pop-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes kt-attention-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+.kt-attention-pulse {
+  animation: kt-attention-pulse 1.8s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kt-reveal {
     opacity: 1 !important;
@@ -90,5 +122,14 @@ body {
   }
   .kt-marquee {
     overflow-x: auto !important;
+  }
+  .kt-pop-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .kt-attention-pulse {
+    animation: none !important;
+    opacity: 1 !important;
   }
 }
