@@ -334,6 +334,13 @@ export default function Reservation({
                 >
                   <span className="inline-block transition-transform duration-200 group-hover:-translate-x-0.5">←</span> Back
                 </button>
+
+                {selectedRoom && (
+                  <p className="mt-8 text-[1.05rem] font-bold leading-[1.6] text-ink min-[561px]:text-[1.15rem]">
+                    First night&#39;s rate, paid online now to hold your room. Estimated total for the full stay:{" "}
+                    {subtotal != null ? `GHS ${subtotal}` : "—"} — the balance is settled at check-in.
+                  </p>
+                )}
               </div>
 
               {/* Sticky checkout summary — price and CTA live together, the
@@ -378,10 +385,6 @@ export default function Reservation({
                         {deposit != null ? `GHS ${deposit}` : "—"}
                       </span>
                     </div>
-                    <p className="mt-2 text-[0.72rem] leading-[1.5] text-white/45">
-                      First night&#39;s rate, paid online now to hold your room. Estimated total for the full stay:{" "}
-                      {subtotal != null ? `GHS ${subtotal}` : "—"} — the balance is settled at check-in.
-                    </p>
                     {initialPromo && (
                       <p className="mt-3 border-t border-white/15 pt-3 text-[0.78rem] text-white/70">
                         Promo code: <span className="text-white">{initialPromo}</span>
