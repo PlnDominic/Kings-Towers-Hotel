@@ -5,6 +5,9 @@ import Reservation from "../components/Reservation";
 export const metadata = {
   title: "Request a Booking | Kings Towers Hotel & Conference Centre",
   description: "Request a room reservation at Kings Towers Hotel & Conference Centre, Ahensan Estate, Kumasi.",
+  alternates: {
+    canonical: "/reservation",
+  },
 };
 
 function paramString(value) {

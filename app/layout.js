@@ -30,10 +30,20 @@ const anonymousPro = Anonymous_Pro({
   weight: ["400", "700"],
 });
 
+// www is the canonical host — the bare domain 308-redirects to it — so
+// every absolute URL Next.js generates from metadataBase (canonical
+// links, Open Graph, the sitemap/robots base) should match, not bounce
+// through a redirect.
+const SITE_URL = "https://www.kingstowers-hotel.com";
+
 export const metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Kings Towers Hotel & Conference Centre | Ahensan Estate, Kumasi",
   description:
     "A serene, scenic retreat in Ahensan Estate, Kumasi. Guest rooms, poolside leisure, and dining at Kings Towers Hotel & Conference Centre.",
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/images/Kings Towers Logo.jpeg",
     apple: "/images/Kings Towers Logo.jpeg",

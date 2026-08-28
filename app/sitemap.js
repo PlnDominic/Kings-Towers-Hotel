@@ -1,4 +1,4 @@
-const BASE_URL = "https://kingstowers-hotel.com";
+const BASE_URL = "https://www.kingstowers-hotel.com";
 
 // Only real, indexable pages — not the API routes, and not
 // /reservation/payment-result, which only makes sense mid-transaction

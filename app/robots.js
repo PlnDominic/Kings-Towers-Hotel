@@ -1,4 +1,4 @@
-const BASE_URL = "https://kingstowers-hotel.com";
+const BASE_URL = "https://www.kingstowers-hotel.com";
 
 export default function robots() {
   return {
