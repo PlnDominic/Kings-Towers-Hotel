@@ -9,7 +9,7 @@ export const rooms = [
   {
     id: "standard",
     title: "Standard Guestroom",
-    price: "550",
+    price: "600",
     img: "/images/room-standard.jpg",
     alt: "Standard Room with double bed",
     desc: "A comfortable double room fitted with air conditioning, TV and a personal refrigerator.",
@@ -18,7 +18,7 @@ export const rooms = [
   {
     id: "queen",
     title: "Queen Bed Guestroom",
-    price: "650",
+    price: "700",
     img: "/images/room-queen.jpg",
     alt: "Queen Room with wood ceiling and orange curtains",
     desc: "A spacious room with a queen bed, warm wood flooring and a dedicated work desk.",
@@ -27,7 +27,7 @@ export const rooms = [
   {
     id: "mini-suite",
     title: "Mini-Suite Guestroom",
-    price: "850",
+    price: "950",
     img: "/images/room-mini-suite.png",
     alt: "Mini-Suite with wood-panelled ceiling, work desk and patterned curtains",
     desc: "Our largest guest room, with extra lounge space for longer stays.",
@@ -36,7 +36,7 @@ export const rooms = [
   {
     id: "twin",
     title: "Twin-Bed Guestroom",
-    price: "950",
+    price: "1000",
     img: "/images/room-twin.jpg",
     alt: "Twin Room with two single beds",
     desc: "Two single beds in one air-conditioned room, ideal for colleagues or friends traveling together.",

@@ -262,7 +262,7 @@ export default function Reservation({
                             className="whitespace-nowrap font-display text-[0.9rem] font-bold transition-colors duration-300"
                             style={{ color: selected ? "var(--color-accent)" : "var(--color-ink)" }}
                           >
-                            GHS {room.price}
+                            GHS {Number(room.price).toLocaleString("en-US")}
                           </span>
                         </div>
                         <span className="font-mono-label text-[0.64rem] uppercase tracking-[0.14em] text-muted">

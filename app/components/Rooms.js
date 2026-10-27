@@ -30,7 +30,7 @@ function RoomCard({ room }) {
       <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 bg-black/45 px-4 py-3">
         <span className="font-serif-display text-[1.05rem] font-medium text-white">{room.title}</span>
         <span className="whitespace-nowrap bg-accent px-3 py-1.5 text-[0.8rem] font-semibold text-white">
-          From GHS {room.price}
+          From GHS {Number(room.price).toLocaleString("en-US")}
         </span>
       </div>
     </Link>

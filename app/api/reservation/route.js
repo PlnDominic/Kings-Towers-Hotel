@@ -2,7 +2,7 @@ import { rooms } from "@/app/data";
 import { sendMail } from "@/lib/mailer";
 import { sanitizeHeaderValue, escapeHtml } from "@/lib/mailFormat";
 
-const ROOM_LABELS = Object.fromEntries(rooms.map((r) => [r.id, `${r.title} — GHS ${r.price}/night`]));
+const ROOM_LABELS = Object.fromEntries(rooms.map((r) => [r.id, `${r.title} — GHS ${Number(r.price).toLocaleString("en-US")}/night`]));
 
 export async function POST(request) {
   let body;
